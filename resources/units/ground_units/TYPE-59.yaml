@@ -1,0 +1,12 @@
+class: Tank
+description: The T-54/55 series was the most-produced tank in history. Estimated production
+  numbers for the series range from 86,000 to 100,000. The Type 59 main battle tank is a
+  Chinese-produced version of the Soviet T-54A tank, an early model of the series.
+introduced: 1958
+manufacturer: Norinco
+origin: USSR/China
+price: 18
+role: Main Battle Tank
+variants:
+  Type 59: {}
+  T-54A: {}

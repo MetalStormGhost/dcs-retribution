@@ -1,0 +1,308 @@
+{
+  "country": "Combined Joint Task Forces Blue",
+  "name": "NATO 1999",
+  "authors": "Ghosti",
+  "description": "<p>NATO in the late 90s, Operation Deliberate Force and Operation Allied Force.</p>",
+  "locales": [
+    "en_US"
+  ],
+  "aircrafts": [
+    "A-10A Thunderbolt II",
+    "AH-64D Apache Longbow",
+    "AV-8B Harrier II Night Attack",
+    "B-1B Lancer",
+    "B-52H Stratofortress",
+    "C-130",
+    "C-130J-30 Super Hercules",
+    "CH-47D",
+    "CH-53E",
+    "F-117A Nighthawk",
+    "F-14A Tomcat (Block 135-GR Late)",
+    "F-15C Eagle",
+    "F-15E Strike Eagle",
+    "F-16CM Fighting Falcon (Block 50)",
+	"F-16D Fighting Falcon (Block 52+)",
+	"F-16D Fighting Falcon (Block 52)",
+	"F-16D Fighting Falcon (Block 50+)",
+	"F-16D Fighting Falcon (Block 50)",
+    "F/A-18C Hornet (Lot 20)",
+    "S-3B Viking",
+    "Tornado GR4",
+	"Tornado IDS",
+    "SH-60B Seahawk",
+    "UH-1H Iroquois",
+    "UH-60A",
+    "UH-60L"
+  ],
+  "awacs": [
+    "E-2C Hawkeye",
+    "E-3A"
+  ],
+  "tankers": [
+    "KC-130",
+    "KC-130J",
+    "KC-135 Stratotanker",
+	"KC-135 Stratotanker MPRS",
+    "S-3B Tanker"
+  ],
+  "frontline_units": [
+    "LAV-25",
+    "M163 Vulcan Air Defense System",
+	"M48 Chaparral",
+    "M1043 HMMWV (M2 HMG)",
+    "M1045 HMMWV (BGM-71 TOW)",
+    "M1097 Heavy HMMWV Avenger",
+    "M1126 Stryker ICV (M2 HMG)",
+    "M1134 Stryker ATGM (BGM-71 TOW)",
+    "M1A2 Abrams",
+    "M2A2 Bradley",
+    "FV4034 Challenger 2",
+    "FV510 Warrior",
+    "Flakpanzer Gepard",
+    "Leopard 1A3",
+    "Leopard 2A4",
+	"Leopard 2A5",
+    "Marder 1A3",
+    "TPz Fuchs",
+    "Roland 2 (Marder Chassis)",
+    "Leclerc S\u00e9ries 2",
+    "VAB Mephisto"
+  ],
+  "artillery_units": [
+    "M109A6 Paladin",
+    "M270 Multiple Launch Rocket System"
+  ],
+  "logistics_units": [
+    "Truck M818 6x6"
+  ],
+  "infantry_units": [
+    "Infantry M249",
+    "Infantry M4",
+    "Infantry M4 Georgia",
+    "MANPADS Stinger",
+    "Mortar 2B11 120mm"
+  ],
+  "preset_groups": [
+    "Hawk",
+    "Rapier",
+    "Roland",
+    "Patriot"
+  ],
+  "naval_units": [
+    "FFG Oliver Hazard Perry",
+    "DDG Arleigh Burke IIa",
+    "CG Ticonderoga",
+    "LHA-1 Tarawa",
+    "CVN-74 John C. Stennis"
+  ],
+  "ewrs": [
+    "RolandEwrGenerator",
+	"HawkEwrGenerator",
+    "PatriotEwrGenerator"
+  ],
+  "aircraft_carrier": [
+    "Stennis"
+  ],
+  "helicopter_carrier": [
+    "LHA_Tarawa"
+  ],
+  "requirements": {},
+  "carrier_names": [
+    "CVN-71 Theodore Roosevelt"
+  ],
+  "helicopter_carrier_names": [
+    "LPH-12 Inchon",
+    "LHD-3 Kearsarge"
+  ],
+  "has_jtac": true,
+  "jtac_unit": "RQ-1A Predator",
+  "liveries_overrides": {
+    "AH-64D Apache Longbow": [
+      "664 Squadron 9 Regiment UK",
+	  "Archangel 4-2 ARB",
+	  "Avengers 1-227th ARB",
+	  "Devils 1-1 ARB",
+	  "General Attack Recon Battalion",
+	  "Grim Reapers 4-2 ARB",
+	  "Gunslingers 2-159th ARB",
+	  "Killer Bees 1-130th ARB NCNG",
+	  "Silver Spurs 3-17 CAV",
+	  "Slayers 4-2 ARB",
+	  "The Air Pirates 1-211th ARB",
+	  "Wolfpack 1-82 ARB"
+    ],
+    "A-10A Thunderbolt II": [
+      "23rd TFW England AFB (EL)"
+    ],
+    "AV-8B Harrier II Night Attack": [
+      "VMA-513G"
+    ],
+    "B-52H Stratofortress": [
+      "USAF - 69th BS - camo"
+    ],
+	"C-130": [
+      "1302",
+      "1310",
+      "1315",
+      "KQVN HCF",
+      "KQVN HCL",
+      "USAF DZ63-779",
+      "USAF PR63-820",
+      "USAF SEA",
+      "USAF SG56-471",
+      "USAF YJ56-470"
+    ],
+    "CH-53E": [
+      "USAF",
+	  "marines 2"
+    ],
+    "F-14A Tomcat (Block 135-GR Late)": [
+	  "VF-14 Tophatters AB100 (1976)",
+	  "VF-41 Black Aces AJ100 (1999 Allied Force)",
+	  "VF-41 Black Aces AJ101 (1999 Allied Force)",
+	  "VF-41 Black Aces AJ102 (1999 Allied Force)",
+	  "VF-41 Black Aces AJ104 (1999 Allied Force)"
+    ],
+    "F-15C Eagle": [
+      "12th Fighter SQN (AK)",
+	  "58th Fighter SQN (EG)",
+	  "390th Fighter SQN",
+	  "433rd Weapons SQN (WA)",
+	  "493rd Fighter SQN (LN)"
+    ],
+    "F-15E Strike Eagle": [
+      "335th Fighter SQN (SJ)",
+	  "492d Fighter SQN (LN)"
+    ],
+    "F-16CM Fighting Falcon (Block 50)": [
+      "default",
+	  "13th_Fighter_Squadron",
+	  "14th_Fighter_Squadron",
+	  "22nd_Fighter_Squadron",
+	  "23rd_Fighter_Squadron",
+	  "36th_Fighter_Squadron",
+	  "55th_Fighter_Squadron",
+	  "77th_Fighter_Squadron",
+	  "79th_Fighter_Squadron",
+	  "80th_Fighter_Squadron",
+	  "132nd_Wing _Iowa_ANG",
+	  "152nd_Fighter_Squadron",
+	  "174th_Fighter_Squadron",
+	  "179th_Fighter_Squadron",
+	  "480th_Fighter_Squadron",
+	  "522nd_Fighter_Squadron",
+	  "Dark_Viper",
+	  "AMI, 5 Stormo 23 Gruppo"
+    ],
+    "UH-1H Iroquois": [
+      "British Army Air Corps",
+	  "Luftwaffe",
+	  "Luftwaffe SAR",
+	  "RAF Olive Drab",
+	  "Royal Navy",
+	  "Italy 15B Stormo S.A.R -Soccorso",
+	  "Italy E.I. 4B Regg. ALTAIR",
+	  "Italy Marina Militare s.n. 80951 7-20",
+	  "Spanish Army",
+	  "French Army",
+	  "US NAVY",
+	  "Army Standard"
+    ],
+    "UH-60A": [
+      "standard"
+    ],
+	"UH-60L": [
+      "default",
+      "US Army MEDEVAC",
+      "US Army SOAR",
+      "US Navy Grey",
+      "USAF Rescue"
+    ],
+    "Tornado GR4": [
+      "bb of 14 squadron raf lossiemouth",
+	  "no. 9 squadron raf marham ab (norfolk)",
+	  "no. 12 squadron raf lossiemouth ab (morayshire)",
+	  "no. 14 squadron raf lossiemouth ab (morayshire)",
+	  "no. 617 squadron raf lossiemouth ab (morayshire)",
+	  "o of ii (ac) squadron raf marham"
+    ],
+	"Tornado IDS": [
+      "aufklarungsgeschwader 51 `immelmann` jagel ab luftwaffe",
+      "jagdbombergeschwader 31 `boelcke` norvenich ab luftwaffe",
+      "jagdbombergeschwader 32 lechfeld ab luftwaffe",
+      "jagdbombergeschwader 33 buchel ab no. 43+19 experimental scheme",
+      "marinefliegergeschwader 2 eggebek ab marineflieger",
+      "ITA Tornado (Sesto Stormo Diavoli Rossi)",
+      "ITA Tornado Black",
+      "ITA Tornado MM7042",
+      "ITA Tornado MM55004"
+    ],
+    "F/A-18C Hornet (Lot 20)": [
+      "VFA-106",
+      "VFA-113",
+      "VFA-122",
+      "VFA-131",
+      "VFA-192",
+      "VFA-34",
+      "VFA-37",
+      "VFA-83",
+      "VFA-87",
+      "VFA-97",
+      "VMFA-122",
+      "VMFA-132",
+      "VMFA-251",
+      "VMFA-312",
+      "VMFA-314",
+      "VMFA-323",
+	  "Spain 111th Escuadron C.15-73",
+	  "Spain 111th Escuadron C.15-88",
+	  "Spain 121th Escuadron C.15-34 50th Anniversary",
+	  "Spain 121th Escuadron C.15-45",
+	  "Spain 121th Escuadron C.15-50",
+	  "Spain 121th Escuadron C.15-60",
+	  "Spain 151th Escuadron C.15-14",
+	  "Spain 151th Escuadron C.15-18",
+	  "Spain 151th Escuadron C.15-23",
+	  "Spain 151th Escuadron C.15-24",
+	  "Spain 211th Escuadron C.15-76",
+	  "Spain 211th Escuadron C.15-77",
+	  "Spain 462th Escuadron C.15-79",
+	  "Spain 462th Escuadron C.15-90"
+    ]
+  },
+  "liveries_overrides_ground_forces": {
+    "Soldier M249": [
+      "summer",
+	  "DPM",
+	  "US-1",
+	  "US-2",
+	  "GOE III SPN m4"
+    ],
+    "Soldier M4": [
+      "summer",
+	  "DPM",
+	  "US-1",
+	  "US-2",
+	  "GOE III SPN m4"
+    ],
+    "Soldier M4 GRG": [
+      "BDU",
+      "US Forest-1",
+      "US Forest-2",
+      "US Forest-3",
+      "US Forest-4"
+    ],
+    "Soldier stinger": [
+      "default"
+    ],
+	"leopard-2A4": [
+      "woodland_Spring",
+      "woodland_Summer",
+      "woodland_Autumn"
+    ],
+	"VAB_Mephisto": [
+      "woodland_Spring",
+      "woodland_Autumn"
+    ]
+  }
+}

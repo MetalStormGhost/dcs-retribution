@@ -1,0 +1,370 @@
+---
+name: Caucasus - Operation Allied Force
+theater: Caucasus
+authors: Ghosti
+description: <p>A faux Operation Allied Force scenario in the Caucasus mountains.</p>
+recommended_player_faction: NATO 1999
+recommended_enemy_faction: Serbia 1999
+recommended_start_date: 1999-03-24
+miz: Caucasus_Allied_Force.miz
+performance: 2
+version: "10.1"
+squadrons:
+  Blue CV:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F-14A Tomcat (Block 135-GR Late)
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F/A-18C Hornet (Lot 20)
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+    - primary: Transport
+      secondary: air-to-ground
+      aircraft:
+        - UH-60L
+    - primary: AEW&C
+      aircraft:
+        - E-2C Hawkeye
+  Blue LHA 1:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AV-8B Harrier II Night Attack
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+  Blue LHA 2:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AV-8B Harrier II Night Attack
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+  # Anapa-Vityazevo
+  12:
+    - primary: Strike
+      secondary: air-to-ground
+      aircraft:
+        - B-1B Lancer
+    - primary: Refueling
+      aircraft:
+        - KC-135 Stratotanker
+    - primary: AEW&C
+      aircraft:
+        - E-3A
+  # Krasnodar-Center
+  13:
+    - primary: Strike
+      secondary: air-to-ground
+      aircraft:
+        - F-117A Nighthawk
+    - primary: Refueling
+      aircraft:
+        - KC-135 Stratotanker MPRS
+    - primary: Transport
+      aircraft:
+        - C-130
+  # Novorossiysk
+  14:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F/A-18C Hornet (Lot 20)
+  # Krymsk
+  15:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F-16CM Fighting Falcon (Block 50)
+    - primary: Refueling
+      aircraft:
+        - KC-130J
+  # Maykop-Khanskaya
+  16:
+    - primary: BARCAP
+      secondary: air-to-air
+      aircraft:
+        - F-15C Eagle
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - F-15E Strike Eagle
+  # Gelendzhik
+  17:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - Tornado GR4
+  # Krasnodar-Pashkovsky
+  19:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - Tornado IDS
+  # Mineralnye Vody
+  26:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - C-101CC Aviojet
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - L-39ZA Albatros
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+  # Beslan
+  32:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: BARCAP
+      secondary: air-to-air
+      aircraft:
+        - MiG-29S Fulcrum-C
+    - primary: Transport
+      aircraft:
+        - Mi-8MTV2 Hip
+  # Nalchik
+  27:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: BARCAP
+      secondary: air-to-air
+      aircraft:
+        - MiG-29A Fulcrum-A
+    - primary: Transport
+      aircraft:
+        - Mi-8MTV2 Hip
+  # Mozdok
+  28:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - C-101CC Aviojet
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - L-39ZA Albatros
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: Refueling
+      aircraft:
+        - IL-78M
+    - primary: Transport
+      aircraft:
+        - IL-76MD
+  # Sukhumi-Babushara
+  20:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - A-10A Thunderbolt II
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F-16CM Fighting Falcon (Block 50)
+  # Gudauta
+  21:
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - A-10A Thunderbolt II
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F-16CM Fighting Falcon (Block 50)
+  # Senaki-Kolkhi
+  23:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - C-101CC Aviojet
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - L-39ZA Albatros
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+  # Kutaisi
+  25:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - C-101CC Aviojet
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - L-39ZA Albatros
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+  Kutaisi West Airfield:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - Mi-24P Hind-F
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342L Gazelle
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342M Gazelle
+    - primary: Transport
+      secondary: air-to-ground
+      aircraft:
+        - Mi-8MTV2 Hip
+  Kutaisi North Airfield:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - Mi-24P Hind-F
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342L Gazelle
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342M Gazelle
+    - primary: Transport
+      secondary: air-to-ground
+      aircraft:
+        - Mi-8MTV2 Hip
+  FOB Baranovka:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AH-64D Apache Longbow
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+  FOB Hadzhiko:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AH-64D Apache Longbow
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+  FOB Tuapse:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AH-64D Apache Longbow
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+  FOB Arhipo-Osipovka:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AH-64D Apache Longbow
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+  FOB Mihaylovskiy Pereval:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AH-64D Apache Longbow
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+  FOB Sochi-Adler:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AH-64D Apache Longbow
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+    - primary: Transport
+      secondary: air-to-ground
+      aircraft:
+        - UH-60L
+  Abadzehskaya FARP:
+    - primary: Transport
+      aircraft:
+        - CH-53E
+  Dagestanskaya FARP:
+    - primary: Transport
+      aircraft:
+        - CH-47D
+  Tsiperchi FARP:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - Mi-24P Hind-F
+  Lentehi FARP:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342L Gazelle
+  Sasashi FARP:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342M Gazelle
+  Sadmeli Roadbase:
+    - primary: Transport
+      secondary: air-to-ground
+      aircraft:
+        - Mi-8MTV2 Hip
+  Oni FARP:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - Mi-24P Hind-F
+  Dgnorisa FARP:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342L Gazelle
+  Haristvala FARP:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342M Gazelle

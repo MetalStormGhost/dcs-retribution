@@ -32,3 +32,6 @@ class PlanCas(PackagePlanningTask[FrontLine]):
     def propose_flights(self) -> None:
         self.propose_flight(FlightType.CAS, randint(2, 4))
         self.propose_flight(FlightType.TARCAP, 2)
+        self.propose_flight(FlightType.SEAD_ESCORT, 2)
+        if random.randint(1, 100) > 60:
+            self.propose_flight(FlightType.REFUELING, 1)

@@ -44,3 +44,4 @@ class PlanDead(PackagePlanningTask[IadsGroundObject]):
             self.propose_flight(FlightType.SEAD, 2)
         self.propose_flight(FlightType.SEAD_ESCORT, 2, EscortType.Sead)
         self.propose_flight(FlightType.ESCORT, 2, EscortType.AirToAir)
+        self.propose_flight(FlightType.REFUELING, 1)

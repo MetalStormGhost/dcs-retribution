@@ -24,3 +24,4 @@ class PlanStrike(PackagePlanningTask[TheaterGroundObject]):
         tgt_count = self.target.alive_unit_count
         self.propose_flight(FlightType.STRIKE, min(4, (tgt_count // 2) + 1))
         self.propose_common_escorts()
+        self.propose_flight(FlightType.REFUELING, 1)

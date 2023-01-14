@@ -28,3 +28,4 @@ class PlanOcaStrike(PackagePlanningTask[ControlPoint]):
         if self.aircraft_cold_start:
             self.propose_flight(FlightType.OCA_AIRCRAFT, 2)
         self.propose_common_escorts()
+        self.propose_flight(FlightType.REFUELING, 1)

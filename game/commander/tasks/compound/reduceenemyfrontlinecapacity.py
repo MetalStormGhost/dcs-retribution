@@ -13,4 +13,9 @@ class ReduceEnemyFrontLineCapacity(CompoundTask[TheaterState]):
 
     def each_valid_method(self, state: TheaterState) -> Iterator[Method[TheaterState]]:
         for ammo_dump in state.ammo_dumps_at(self.control_point):
-            yield [PlanStrike(ammo_dump)]
+            yield [
+                PlanStrike(
+                    target=ammo_dump,
+                    settings=self.control_point.coalition.game.settings,
+                )
+            ]

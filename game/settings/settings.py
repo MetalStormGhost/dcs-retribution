@@ -173,6 +173,55 @@ class Settings:
             "extremely incomplete so does not affect all weapons."
         ),
     )
+    autoplan_tankers_for_strike: bool = boolean_option(
+        "Autoplanner plans refueling flights for Strike packages",
+        page=CAMPAIGN_MANAGEMENT_PAGE,
+        section=GENERAL_SECTION,
+        default=True,
+        invert=False,
+        detail=(
+            "If checked, the autoplanner will include tankers in Strike packages, "
+            "provided the faction has access to them."
+        ),
+    )
+    autoplan_tankers_for_oca: bool = boolean_option(
+        "Autoplanner plans refueling flights for OCA packages",
+        page=CAMPAIGN_MANAGEMENT_PAGE,
+        section=GENERAL_SECTION,
+        default=True,
+        invert=False,
+        detail=(
+            "If checked, the autoplanner will include tankers in Offensive Counter Air packages, "
+            "provided the faction has access to them."
+        ),
+    )
+    autoplan_tankers_for_dead: bool = boolean_option(
+        "Autoplanner plans refueling flights for DEAD packages",
+        page=CAMPAIGN_MANAGEMENT_PAGE,
+        section=GENERAL_SECTION,
+        default=True,
+        invert=False,
+        detail=(
+            "If checked, the autoplanner will include tankers in Destruction of Air Defences packages, "
+            "provided the faction has access to them."
+        ),
+    )
+    autoplan_tankers_for_cas: int = bounded_int_option(
+        "Chance for autoplanner planning tankers for CAS packages (%)",
+        page=CAMPAIGN_MANAGEMENT_PAGE,
+        section=GENERAL_SECTION,
+        default=50,
+        min=0,
+        max=100,
+    )
+    opfor_autoplanner_aggressiveness: int = bounded_int_option(
+        "OPFOR autoplanner aggressiveness (%)",
+        page=CAMPAIGN_MANAGEMENT_PAGE,
+        section=GENERAL_SECTION,
+        default=20,
+        min=0,
+        max=100,
+    )
     # Pilots and Squadrons
     ai_pilot_levelling: bool = boolean_option(
         "Allow AI pilot leveling",
@@ -402,19 +451,6 @@ class Settings:
         default=80,
         min=1,
         max=100,
-    )
-    opfor_autoplanner_aggressiveness: int = bounded_int_option(
-        "OPFOR autoplanner aggressiveness (%)",
-        page=MISSION_GENERATOR_PAGE,
-        section=GAMEPLAY_SECTION,
-        default=20,
-        min=0,
-        max=100,
-        detail=(
-            "Chance (larger number -> higher chance) that the OPFOR AI "
-            "autoplanner will take risks and plan flights against targets "
-            "within threatened airspace."
-        ),
     )
 
     # Performance

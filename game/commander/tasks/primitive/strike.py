@@ -5,11 +5,14 @@ from dataclasses import dataclass
 from game.ato.flighttype import FlightType
 from game.commander.tasks.packageplanningtask import PackagePlanningTask
 from game.commander.theaterstate import TheaterState
+from game.settings import Settings
 from game.theater.theatergroundobject import TheaterGroundObject
 
 
 @dataclass
 class PlanStrike(PackagePlanningTask[TheaterGroundObject]):
+    settings: Settings
+
     def preconditions_met(self, state: TheaterState) -> bool:
         if self.target not in state.strike_targets:
             return False
@@ -24,4 +27,5 @@ class PlanStrike(PackagePlanningTask[TheaterGroundObject]):
         tgt_count = self.target.alive_unit_count
         self.propose_flight(FlightType.STRIKE, min(4, (tgt_count // 2) + 1))
         self.propose_common_escorts()
-        self.propose_flight(FlightType.REFUELING, 1)
+        if self.settings.autoplan_tankers_for_strike:
+            self.propose_flight(FlightType.REFUELING, 1)

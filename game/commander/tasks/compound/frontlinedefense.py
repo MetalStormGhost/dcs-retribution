@@ -8,4 +8,8 @@ from game.htn import CompoundTask, Method
 class FrontLineDefense(CompoundTask[TheaterState]):
     def each_valid_method(self, state: TheaterState) -> Iterator[Method[TheaterState]]:
         for front_line in state.vulnerable_front_lines:
-            yield [PlanCas(front_line)]
+            yield [
+                PlanCas(
+                    target=front_line, settings=state.context.coalition.game.settings
+                )
+            ]

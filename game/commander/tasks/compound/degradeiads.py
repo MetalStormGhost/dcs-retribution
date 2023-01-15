@@ -20,5 +20,7 @@ class DegradeIads(CompoundTask[TheaterState]):
         target: Union[IadsGroundObject, NavalGroundObject]
     ) -> Union[PlanDead, PlanAntiShip]:
         if isinstance(target, IadsGroundObject):
-            return PlanDead(target)
+            return PlanDead(
+                target=target, settings=target.control_point.coalition.game.settings
+            )
         return PlanAntiShip(target)

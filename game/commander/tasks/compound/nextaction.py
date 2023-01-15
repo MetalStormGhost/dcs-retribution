@@ -16,11 +16,12 @@ from game.commander.tasks.compound.protectairspace import ProtectAirSpace
 from game.commander.tasks.compound.theatersupport import TheaterSupport
 from game.commander.theaterstate import TheaterState
 from game.htn import CompoundTask, Method
+from game.settings import Settings
 
 
 @dataclass(frozen=True)
 class PlanNextAction(CompoundTask[TheaterState]):
-    aircraft_cold_start: bool
+    settings: Settings
 
     def each_valid_method(self, state: TheaterState) -> Iterator[Method[TheaterState]]:
         yield [TheaterSupport()]
@@ -29,6 +30,6 @@ class PlanNextAction(CompoundTask[TheaterState]):
         yield [DefendBases()]
         yield [InterdictReinforcements()]
         yield [AttackBattlePositions()]
-        yield [AttackAirInfrastructure(self.aircraft_cold_start)]
+        yield [AttackAirInfrastructure(state.context.coalition.game.settings)]
         yield [AttackBuildings()]
         yield [DegradeIads()]

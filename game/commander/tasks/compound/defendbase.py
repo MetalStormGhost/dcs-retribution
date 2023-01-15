@@ -16,4 +16,4 @@ class DefendBase(CompoundTask[TheaterState]):
     def each_valid_method(self, state: TheaterState) -> Iterator[Method[TheaterState]]:
         yield [DefensiveStance(self.front_line, state.context.coalition.player)]
         yield [RetreatStance(self.front_line, state.context.coalition.player)]
-        yield [PlanCas(self.front_line)]
+        yield [PlanCas(self.front_line, state.context.coalition.game.settings)]

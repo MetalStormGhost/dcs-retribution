@@ -1082,7 +1082,7 @@ class F_16D_52(PlaneType):
         )
 
     class Pylon16:
-        IDF_Mods_Project_F_16I_CFT = (16, WeaponsF16I.IDF_Mods_Project_F_16I_CFT)
+        IDF_Mods_Project_F_16C_CFT = (16, WeaponsF16I.IDF_Mods_Project_F_16C_CFT)
 
     pylons: Set[int] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
 
@@ -1891,7 +1891,7 @@ class F_16D_50(PlaneType):
         )
 
     class Pylon16:
-        IDF_Mods_Project_F_16I_CFT = (16, WeaponsF16I.IDF_Mods_Project_F_16I_CFT)
+        IDF_Mods_Project_F_16C_CFT = (16, WeaponsF16I.IDF_Mods_Project_F_16C_CFT)
 
     pylons: Set[int] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
 

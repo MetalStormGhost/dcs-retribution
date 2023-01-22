@@ -1,0 +1,116 @@
+{
+  "country": "Serbia",
+  "name": "Serbia 1999",
+  "authors": "Ghosti",
+  "description": "<p>Serbian armed forces in the late 90s.</p>",
+  "locales": [
+    "ru_RU"
+  ],
+  "aircrafts": [
+    "IL-76MD",
+    "Mi-24P Hind-F",
+    "Mi-8MTV2 Hip",
+    "MiG-29A Fulcrum-A",
+    "MiG-29S Fulcrum-C",
+    "C-101CC Aviojet",
+    "L-39ZA Albatros",
+    "SA 342L Gazelle",
+    "SA 342M Gazelle"
+  ],
+  "awacs": [
+  ],
+  "tankers": [
+    "IL-78M"
+  ],
+  "frontline_units": [
+    "BTR-D",
+    "BMD-1",
+    "BRDM-2",
+	"SA-9 Strela",
+    "SA-13 Gopher (9K35 Strela-10M3)",
+    "T-72B with Kontakt-1 ERA",
+    "T-55A",
+	"Bofors 40 mm Gun",
+	"ZU-23 on Ural-375",
+    "LUV UAZ-469 Jeep",
+    "Truck Ural-375",
+	"Truck KAMAZ 43101"
+  ],
+  "artillery_units": [
+    "2S1 Gvozdika",
+    "BM-21 Grad"
+  ],
+  "logistics_units": [
+    "LUV UAZ-469 Jeep",
+    "Truck Ural-375",
+	"Truck KAMAZ 43101"
+  ],
+  "infantry_units": [
+    "Infantry AK-74 Rus",
+	"Infantry AK-74 Rus ver2",
+	"Infantry AK-74 Rus ver3",
+    "MANPADS SA-18 Igla-S \"Grouse\"",
+    "Mortar 2B11 120mm",
+    "Paratrooper AKS",
+    "Paratrooper RPG-16"
+  ],
+  "preset_groups": [
+    "SA-3/S-125",
+    "SA-3/S-125 V-601P/5V27",
+    "SA-6"
+  ],
+  "air_defense_units": [
+    "EWR 1L13",
+    "SAM SA-6 Kub \"Straight Flush\" STR",
+    "SA-9 Strela",
+    "SA-13 Gopher (9K35 Strela-10M3)",
+	"Bofors 40 mm Gun",
+    "AAA ZU-23 Closed Emplacement",
+    "ZU-23 on Ural-375"
+  ],
+  "aircraft_carrier": [],
+  "helicopter_carrier": [],
+  "helicopter_carrier_names": [],
+  "destroyers": [],
+  "cruisers": [],
+  "requirements": {},
+  "carrier_names": [],
+  "navy_generators": [],
+  "liveries_overrides": {
+    "IL-78M": [
+      "RF Air Force aeroflot"
+    ],
+	"IL-76MD": [
+      "MVD aeroflot"
+    ],
+    "Mi-24P Hind-F": [
+      "Serbian Air Force",
+	  "Serbian Air Force Grey #101",
+	  "JSO"
+    ],
+    "Mi-8MTV2 Hip": [
+      "Serbian Air Force",
+	  "SerbianAFnew"
+    ],
+    "MiG-29A Fulcrum-A": [
+      "Serbian AF"
+    ],
+    "MiG-29S Fulcrum-C": [
+      "Serbian Air Force LAE Vitezovi"
+    ],
+    "C-101CC Aviojet": [
+      "Serbia - 241. lbae"
+    ],
+    "L-39ZA Albatros": [
+      "Serbian Air Force Super Galeb G4"
+    ],
+    "SA 342L Gazelle": [
+      "Serbia Fictional"
+    ],
+    "SA 342M Gazelle": [
+      "Serbia Fictional"
+    ]
+  },
+  "has_jtac": true,
+  "jtac_unit": "Mi-8MTV2 Hip"
+}

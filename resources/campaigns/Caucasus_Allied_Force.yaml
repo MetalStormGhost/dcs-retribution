@@ -1,0 +1,458 @@
+---
+name: Caucasus - Operation Allied Force
+theater: Caucasus
+authors: Ghosti
+description: <p>A faux Operation Allied Force scenario in the Caucasus mountains.</p>
+recommended_player_faction: NATO 1999
+recommended_enemy_faction: Serbia 1999
+recommended_start_date: 1999-03-24
+miz: Caucasus_Allied_Force.miz
+performance: 2
+version: "10.0"
+squadrons:
+  # CVN-71 Theodore Roosevelt
+  Blue CVN-71:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F-14A Tomcat (Block 135-GR Late)
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - VFA-87
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F/A-18C Hornet (AI)
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+    - primary: Transport
+      secondary: air-to-ground
+      aircraft:
+        - UH-60L
+    - primary: AEW&C
+      aircraft:
+        - E-2C Hawkeye
+  # Foch (R99)
+  Blue R99:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F-14A Tomcat (Block 135-GR Late)
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - VFA-87
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F/A-18C Hornet (AI)
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - French Army
+  # LPH-12 Inchon
+  Blue LPH-12:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - VMA-332
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - HMLA-169 (UH-1H)
+  # LHD-3 Kearsarge
+  Blue LHD-3:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - VMA-513
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - HMLA-269 (UH-1H)
+  # HMS Invincible (R05)
+  Blue R05:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - 800 Naval Air Squadron
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - 801 Naval Air Squadron
+  # Giuseppe Garibaldi (551)
+  Blue C551:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - GAI Wolves
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - E.I. 4B Regg.
+  # RFA Argus (A135)
+  Blue A135:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - Royal Navy
+  # Anapa-Vityazevo
+  12:
+    - primary: Strike
+      secondary: air-to-ground
+      aircraft:
+        - B-1B Lancer
+    - primary: Refueling
+      aircraft:
+        - KC-135 Stratotanker MPRS
+    - primary: AEW&C
+      aircraft:
+        - E-3A
+  # Krasnodar-Center
+  13:
+    - primary: Strike
+      secondary: air-to-ground
+      aircraft:
+        - F-117A Nighthawk
+    - primary: Refueling
+      aircraft:
+        - KC-135 Stratotanker MPRS
+    - primary: Transport
+      aircraft:
+        - C-130
+  # Novorossiysk
+  14:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F/A-18C Hornet (Lot 20)
+  # Krymsk
+  15:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F-16CM Fighting Falcon (Block 50)
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - Mirage 2000C
+  # Maykop-Khanskaya
+  16:
+    - primary: BARCAP
+      secondary: air-to-air
+      aircraft:
+        - F-15C Eagle
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - F-15E Strike Eagle
+  # Gelendzhik
+  17:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - Tornado GR4
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - F-16D Fighting Falcon (Block 52+)
+  # Krasnodar-Pashkovsky
+  19:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - Tornado IDS
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - F-16D Fighting Falcon (Block 50+)
+  # Mineralnye Vody
+  26:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - C-101CC Aviojet
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - L-39ZA Albatros
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+  # Beslan
+  32:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: BARCAP
+      secondary: air-to-air
+      aircraft:
+        - MiG-29S Fulcrum-C
+    - primary: Transport
+      aircraft:
+        - Mi-8MTV2 Hip
+  # Nalchik
+  27:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: BARCAP
+      secondary: air-to-air
+      aircraft:
+        - MiG-29A Fulcrum-A
+    - primary: Transport
+      aircraft:
+        - Mi-8MTV2 Hip
+  # Mozdok
+  28:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - C-101CC Aviojet
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - L-39ZA Albatros
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: Refueling
+      aircraft:
+        - IL-78M
+    - primary: Transport
+      aircraft:
+        - IL-76MD
+  # Sukhumi-Babushara
+  20:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - A-10A Thunderbolt II
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F-16CM Fighting Falcon (Block 50)
+  # Gudauta
+  21:
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - A-10A Thunderbolt II
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - F-16CM Fighting Falcon (Block 50)
+  # Senaki-Kolkhi
+  23:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - C-101CC Aviojet
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - L-39ZA Albatros
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+  # Kutaisi
+  25:
+    - primary: BARCAP
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - C-101CC Aviojet
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - L-39ZA Albatros
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - MiG-21bis Fishbed-N
+  Kutaisi West Airfield:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - Mi-24P Hind-F
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342L Gazelle
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342M Gazelle
+    - primary: Transport
+      secondary: air-to-ground
+      aircraft:
+        - Mi-8MTV2 Hip
+  Kutaisi North Airfield:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - Mi-24P Hind-F
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342L Gazelle
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342M Gazelle
+    - primary: Transport
+      secondary: air-to-ground
+      aircraft:
+        - Mi-8MTV2 Hip
+  FOB Baranovka:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AH-64D Apache Longbow
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+  FOB Hadzhiko:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AH-64D Apache Longbow
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+  FOB Tuapse:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AH-64D Apache Longbow
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+  FOB Arhipo-Osipovka:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AH-64D Apache Longbow
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+  FOB Mihaylovskiy Pereval:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AH-64D Apache Longbow
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+  FOB Sochi-Adler:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - AH-64D Apache Longbow
+    - primary: BAI
+      secondary: air-to-ground
+      aircraft:
+        - UH-1H Iroquois
+    - primary: Transport
+      secondary: air-to-ground
+      aircraft:
+        - UH-60L
+  Abadzehskaya FARP:
+    - primary: Transport
+      aircraft:
+        - CH-53E
+  Dagestanskaya FARP:
+    - primary: Transport
+      aircraft:
+        - CH-47D
+  Tsiperchi FARP:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - Mi-24P Hind-F
+  Lentehi FARP:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342L Gazelle
+  Sasashi FARP:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342M Gazelle
+  Sadmeli Roadbase:
+    - primary: Transport
+      secondary: air-to-ground
+      aircraft:
+        - Mi-8MTV2 Hip
+  Oni FARP:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - Mi-24P Hind-F
+  Dgnorisa FARP:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342L Gazelle
+  Haristvala FARP:
+    - primary: CAS
+      secondary: air-to-ground
+      aircraft:
+        - SA 342M Gazelle
+carriers:
+  Blue CVN-71:
+    preferred_name: CVN-74 John C. Stennis
+    preferred_type: Stennis
+  # Foch (R99)
+  Blue R99:
+    preferred_name: Foch (R99)
+    preferred_type: Forrestal
+  # LPH-12 Inchon
+  Blue LPH-12:
+    preferred_name: Blue LPH-12
+    preferred_type: LHA_Tarawa
+  # LHD-3 Kearsarge
+  Blue LHD-3:
+    preferred_name: LHD-3 Kearsarge
+    preferred_type: LHA_Tarawa
+  # HMS Invincible (R05)
+  Blue R05:
+    preferred_name: HMS Invincible (R05)
+    preferred_type: hms_invincible
+  # Giuseppe Garibaldi (551)
+  Blue C551:
+    preferred_name: Giuseppe Garibaldi (551)
+    preferred_type: LHA_Tarawa
+  # RFA Argus (A135)
+  Blue A135:
+    preferred_name: RFA Argus (A135)
+    preferred_type: Type_071

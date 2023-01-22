@@ -9,6 +9,7 @@
 * **[Mission Generation]** Randomization in radio frequency allocation
 * **[Cheat Menu]** Option to instantly transfer squadrons across bases.
 * **[Modding]** Support for F/A-18E/F/G mod version 2.0
+* **[Modding]** Support for IDF Mod Project F-16I Sufa & F-16D v3.2 mod
 * **[UI]** Add selectable units in faction overview during campaign generation.
 * **[UI]** Add button to rename pilots in Air Wing's Squadron dialog.
 * **[UI]** Add clone buttons for flights & packages.

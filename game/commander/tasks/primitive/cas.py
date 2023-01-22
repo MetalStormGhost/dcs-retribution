@@ -36,5 +36,5 @@ class PlanCas(PackagePlanningTask[FrontLine]):
         self.propose_flight(FlightType.CAS, randint(2, 4))
         self.propose_flight(FlightType.TARCAP, 2)
         self.propose_flight(FlightType.SEAD_ESCORT, 2)
-        if random.randint(1, 100) <= self.settings.autoplan_tankers_for_cas:
+        if randint(1, 100) <= self.settings.autoplan_tankers_for_cas:
             self.propose_flight(FlightType.REFUELING, 1)

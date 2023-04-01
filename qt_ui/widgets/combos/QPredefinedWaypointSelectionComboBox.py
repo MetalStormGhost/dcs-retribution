@@ -54,7 +54,6 @@ class QPredefinedWaypointSelectionComboBox(QFilteredComboBox):
         return waypoints
 
     def find_possible_waypoints(self):
-
         self.wpts = []
         model = QStandardItemModel()
         i = 0
@@ -68,7 +67,7 @@ class QPredefinedWaypointSelectionComboBox(QFilteredComboBox):
         if self.include_frontlines:
             for front_line in self.game.theater.conflicts():
                 pos = FrontLineConflictDescription.frontline_position(
-                    front_line, self.game.theater
+                    front_line, self.game.theater, self.game.settings
                 )[0]
                 wptname = f"Frontline {front_line.name} [CAS]"
                 wpt = FlightWaypoint(

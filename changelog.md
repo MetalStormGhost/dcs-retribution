@@ -1,34 +1,92 @@
+# Retribution 1.1.0
+
+## Features/Improvements
+* **[Mission Generation]** Given a CAS flight was planned, delay ground force attack until first CAS flight is on station
+* **[Mission Generation]** Add option to switch ATFLIR to LITENING automatically for ground based F/A-18C flights
+* **[Mission Generation]** Add option to configure OPFOR autoplanner aggressiveness and have the AI take risks and plan missions against defended targets
+* **[Mission Generation]** Add option to configure the desired tanker on-station time in settings
+* **[Mission Generation]** Reserve GUARD frequency on VHF/UHF
+* **[Mission Generation]** Randomization in radio frequency allocation
+* **[Mission Generation]** Configurable number of Combined Arms slots
+* **[Mission Generation]** Enable spectating & F11 free camera when the "Allow external views" option is selected
+* **[Cheat Menu]** Option to instantly transfer squadrons across bases.
+* **[Modding]** Support for IDF Mod Project F-16I Sufa & F-16D v3.2 mod
+* **[Modding]** Support for F/A-18E/F/G mod version 2.1
+* **[Modding]** Support for Swedish Military Assets for DCS by Currenthill Version 1.10
+* **[UI]** Add selectable units in faction overview during campaign generation.
+* **[UI]** Add button to rename pilots in Air Wing's Squadron dialog.
+* **[UI]** Add clone buttons for flights & packages.
+* **[UI]** Editing of flight's custom name.
+* **[UI]** Introduce custom names for packages (purely for organizational purposes).
+* **[UI]** Configurable UHF frequency (225-400MHz) for Packages, Carriers, LHAs, FOBs & FARPs.
+* **[UI]** Configurable Intra-Flight frequency for Flights.
+* **[UI]** Configurable TACAN for Carriers, LHAs & Tankers.
+* **[UI]** Configurable ICLS for capable Carriers & LHAs.
+* **[UI]** Configurable LINK4 for Carriers.
+* **[Kneeboard]** Show package information in Support page
+* **[Kneeboard]** Show extra weather information on 'Mission info' page
+* **[Kneeboard]** Show BRC in 'RWY' column for aircraft carriers on 'Mission info' page
+* **[Campaign Design]** Ability to define designated CTLD zones for Control Points (Airbases & FOBs/FARPs)
+* **[Campaign Design]** Ability to define preset groups for specific TGOs, given the preset group is accessible for the faction and the task matches.
+* **[Campaign Management]** Additional options for automated budget management.
+* **[Campaign Management]** New options to allow more control of randomized flight sizes (applicable for BARCAP/CAS/OCA/ANTI-SHIP).
+* **[Plugins]** Updated Splash Damage script to v2.0 by RotorOps.
+* **[Mission Generation]** Improvements to DEAD & STRIKE flights, allowing AI to handle a larger variety of weapons.
+
+## Fixes
+* **[UI]** Removed deprecated options
+* **[UI]** Add missing icon & banner for C130 Hercules mod
+* **[Mission Generation]** Avoid aircraft from being assigned to helicopter parking spots, resulting into air starts that usually crash.
+* **[Mission Generation]** Use stacking algorithm to create vertical separation between flights spawning mid-mission over their departure, usually resulting into mid-air collisions.
+* **[Mission Generation]** Fixed all callsigns being "Enfield 1-1" on dedicated servers.
+* **[Mission Generation]** Fixed AI ferry flights for helicopters when transferring to a FOB/FARP.
+* **[Mission Generation]** Fixed 'Uninitialized flight' exception when adding flights after aborted take-off.
+* **[Modding]** Fixed conflicts caused by HDS units
+* **[UX]** Gracefully handle corrupted preferences file.
+* **[Mission Generation]** Aircraft not using decoys during SEAD.
+* **[Campaign]** New campaign (1968 Yankee Station) by Adecarcer
+
+# Retribution 1.0.1 (hotfix)
+* **[Mission Generation]** Fix serialization issue when STRIKE flight has no escorts
+
 # Retribution 1.0.0
 
 ## Features/Improvements
-* **[Engine]** Support for DCS v2.8.0.32066.
+* **[Engine]** Support for DCS v2.8.1.34437.
 * **[Briefing]** Add tanker info to mission briefing
-* **[Campaign]** Add 3 new campaigns by Oscar Juliet from WRL
+* **[Campaign]** Add 5 new campaigns by Oscar Juliet from WRL
 * **[Campaign]** Add ability to define livery overrides also for ground/naval units
 * **[Data]** Added data to support C-47 Skytrain.
+* **[Data]** Added data to support F-16A MLU.
 * **[Data]** Added data to support KS-19 & SON-9, including support for "AAA Site" layout.
 * **[Mission Generation]** Add option to configure the maximum front-line length in settings
 * **[Mission Generation]** Use Escort & SEAD tasks for Escort & SEAD Escort flights
 * **[Mission Generation]** Variable flight-size (2/3/4-ship) for 
 BAI/ANTISHIP/DEAD/STRIKE/BARCAP/CAS/OCA/AIR-ASSAULT (main) missions
+* **[Mission Generation]** Add option to only generate night missions
 * **[Modding]** Support for F-15D 'Baz' mod version 1.0
 * **[Modding]** Support for Su-30 mod version 2.01B
 * **[Modding]** Support for A-6A Intruder version 2.7.5.01
 * **[Modding]** Support for F-4B Phantom II mod version v2.7.10.02, patch 2022.10.02
-* **[Modding]** Support for F-100 Super Sabre mod versions v2.7.18.01 & 2.7.18.30765 and patches 30.09.22 & 09.10.22
+* **[Modding]** Support for F-100 Super Sabre mod versions v2.7.18.01 & 2.7.18.30765 and patch 20.10.22
 * **[Modding]** Support for F-105 mod version 2.7.12.23x
 * **[Modding]** Support IDF Mod Project F-16I Sufa & F-16D v2.2 mod
 * **[Modding]** Support for F-84G mod version 2.5.7.01
 * **[Modding]** Updated F-104 mod version support to 2.7.11.222.01
+* **[Modding]** Updated Community A-4E-C mod version support to 2.1.0 release.
+* **[UI]** Add livery selector to Air Wing Configurator's squadrons.
 * **[Performance]** Added performance option: Maximum front-line unit supply per control point.
 * **[Performance]** Added performance option: Disable convoys.
 * **[Performance]** Added performance option: Front-line troops prefer roads.
+* **[Performance]** Added performance option: Disable idle aircraft at airfields.
 * **[Squadrons]** Squadron pilot limits enabled by default.
 * **[UI]** Add livery selector to Air Wing Configurator's squadrons.
 
 ## Fixes
 
 * **[Mission Generation]** Fixed issue where aircraft carriers would return after being killed.
+* **[Mission Generation]** Kneeboard STRIKE coordinates would sometimes get clipped when not fitting.
+* **[UI]** Fix exception when trying to add a waypoints to a flightplan.
 
 # Liberation:
 # 7.0.0
@@ -37,7 +95,24 @@ Saves from 6.x are not compatible with 7.0.
 
 ## Features/Improvements
 
+* **[Engine]** Support for DCS 2.8.3.37556.
+* **[Engine]** Saved games are now a zip file of save assets for easier bug reporting. The new extension is .liberation.zip. Drag and drop that file into bug reports.
+* **[Flight Planning]** Package TOT and composition can be modified after advancing time in Liberation.
+* **[Mission Generation]** Units on the front line are now hidden on MFDs.
+* **[Mission Generation]** Preset radio channels will now be configured for both A-10C modules.
+* **[Mission Generation]** Both A-10C modules now use separate radios for inter- and intra-flight comms (similar to other modern aircraft).
+* **[Modding]** Updated Community A-4E-C mod version support to 2.1.0 release.
+* **[Modding]** Add support for VSN F-4B and F-4C mod.
+
 ## Fixes
+
+# 6.1.1
+
+## Fixes
+
+* **[Data]** Fixed unit ID for the KS-19 AAA. KS-19 would not previously generate correctly in missions. A new game is required for this fix to take effect.
+* **[Flight Planning]** Automatic flight planning will no longer accidentally plan a recovery tanker instead of a theater refueling package. This fixes a potential crash during mission generation when opfor plans a refueling task at a sunk carrier. You'll need to skip the current turn to force opfor to replan their flights to get the fix.
+* **[Mission Generation]** Using heliports (airports without any runways) will no longer cause mission generation to fail.
 
 # 6.1.0
 
@@ -45,8 +120,14 @@ Saves from 6.0.0 are compatible with 6.1.0
 
 ## Features/Improvements
 
+* **[Factions]** Defaulted bluefor modern to use Georgian and Ukrainian liveries for Russian aircraft.
+* **[Factions]** Added Peru.
+* **[Modding]** Added support for the HMS Ariadne, Achilles, and Castle class.
+
 ## Fixes
 
+* **[Flight Planning]** Fixes CAS flights not having landing waypoints.
+* **[Squadrons]** Fixed the livery for the VF-33 F-14A squadron.
 * **[UI]** Fixed an issue where manual submit of mission results did not end the mission correctly.
 
 # 6.0.0

@@ -24,7 +24,6 @@ ICONS: Dict[str, QPixmap] = {}
 
 
 def load_icons():
-
     ICONS["New"] = QPixmap("./resources/ui/misc/" + get_theme_icons() + "/new.png")
     ICONS["Open"] = QPixmap("./resources/ui/misc/" + get_theme_icons() + "/open.png")
     ICONS["Save"] = QPixmap("./resources/ui/misc/" + get_theme_icons() + "/save.png")
@@ -205,6 +204,7 @@ def load_aircraft_icons():
                 os.path.join("./resources/ui/units/aircrafts/icons/", aircraft)
             )
     AIRCRAFT_ICONS["F-16C_50"] = AIRCRAFT_ICONS["F-16C"]
+    AIRCRAFT_ICONS["F-16A_MLU"] = AIRCRAFT_ICONS["F-16A"]
     AIRCRAFT_ICONS["FA-18C_hornet"] = AIRCRAFT_ICONS["FA-18C"]
     AIRCRAFT_ICONS["A-10C_2"] = AIRCRAFT_ICONS["A-10C"]
     f1_refuel = ["Mirage-F1CT", "Mirage-F1EE", "Mirage-F1M-EE", "Mirage-F1EQ"]

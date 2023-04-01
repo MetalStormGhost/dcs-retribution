@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from datetime import timedelta
 from typing import Iterator, TYPE_CHECKING, Type
 
+from ._common_ctld import generate_random_ctld_point
 from game.ato.flightplans.standard import StandardFlightPlan, StandardLayout
 from game.theater.controlpoint import ControlPointType
 from game.theater.missiontarget import MissionTarget
@@ -13,8 +14,10 @@ from .planningerror import PlanningError
 from .uizonedisplay import UiZone, UiZoneDisplay
 from .waypointbuilder import WaypointBuilder
 from ..flightwaypoint import FlightWaypointType
+from ...theater.interfaces.CTLD import CTLD
 
 if TYPE_CHECKING:
+    from dcs import Point
     from ..flightwaypoint import FlightWaypoint
 
 
@@ -25,7 +28,7 @@ class AirAssaultLayout(StandardLayout):
     pickup: FlightWaypoint | None
     nav_to_ingress: list[FlightWaypoint]
     ingress: FlightWaypoint
-    drop_off: FlightWaypoint
+    drop_off: FlightWaypoint | None
     # This is an implementation detail used by CTLD. The aircraft will not go to this
     # waypoint. It is used by CTLD as the destination for unloaded troops.
     target: FlightWaypoint
@@ -37,7 +40,8 @@ class AirAssaultLayout(StandardLayout):
             yield self.pickup
         yield from self.nav_to_ingress
         yield self.ingress
-        yield self.drop_off
+        if self.drop_off is not None:
+            yield self.drop_off
         yield self.target
         yield from self.nav_to_home
         yield self.arrival
@@ -53,7 +57,9 @@ class AirAssaultFlightPlan(StandardFlightPlan[AirAssaultLayout], UiZoneDisplay):
 
     @property
     def tot_waypoint(self) -> FlightWaypoint:
-        return self.layout.drop_off
+        if self.flight.is_helo and self.layout.drop_off is not None:
+            return self.layout.drop_off
+        return self.layout.target
 
     def tot_for_waypoint(self, waypoint: FlightWaypoint) -> timedelta | None:
         if waypoint == self.tot_waypoint:
@@ -80,8 +86,10 @@ class AirAssaultFlightPlan(StandardFlightPlan[AirAssaultLayout], UiZoneDisplay):
 
 class Builder(IBuilder[AirAssaultFlightPlan, AirAssaultLayout]):
     def layout(self) -> AirAssaultLayout:
-        if not self.flight.is_helo:
-            raise PlanningError("Air assault is only usable by helicopters")
+        if not self.flight.is_helo and not self.flight.is_hercules:
+            raise PlanningError(
+                "Air assault is only usable by helicopters and Anubis' C-130 mod"
+            )
         assert self.package.waypoints is not None
 
         altitude = feet(1500) if self.flight.is_helo else self.doctrine.ingress_altitude
@@ -89,7 +97,7 @@ class Builder(IBuilder[AirAssaultFlightPlan, AirAssaultLayout]):
 
         builder = WaypointBuilder(self.flight, self.coalition)
 
-        if self.flight.departure.cptype in [
+        if self.flight.is_hercules or self.flight.departure.cptype in [
             ControlPointType.AIRCRAFT_CARRIER_GROUP,
             ControlPointType.LHA_GROUP,
             ControlPointType.OFF_MAP,
@@ -99,27 +107,25 @@ class Builder(IBuilder[AirAssaultFlightPlan, AirAssaultLayout]):
             pickup = None
             pickup_position = self.flight.departure.position
         else:
-            # TODO The calculation of the Pickup LZ is currently randomized. This
-            # leads to the problem that we can not gurantee that the LZ is clear of
-            # obstacles. This has to be improved in the future so that the Mission can
-            # be autoplanned. In the current state the User has to check the created
-            # Waypoints for the Pickup and Dropoff LZs are free of obstacles.
-            # Create a special pickup zone for Helos from Airbase / FOB
             pickup = builder.pickup_zone(
                 MissionTarget(
                     "Pickup Zone",
-                    self.flight.departure.position.random_point_within(1200, 600),
+                    self._generate_ctld_pickup(),
                 )
             )
             pickup_position = pickup.position
         assault_area = builder.assault_area(self.package.target)
         heading = self.package.target.position.heading_between_point(pickup_position)
+        if self.flight.is_hercules:
+            assault_area.only_for_player = False
+            assault_area.alt = feet(1000)
 
-        # TODO we can not gurantee a safe LZ for DropOff. See comment above.
+        # TODO: define CTLD dropoff zones in campaign miz?
         drop_off_zone = MissionTarget(
             "Dropoff zone",
             self.package.target.position.point_from_heading(heading, 1200),
         )
+        dz = builder.dropoff_zone(drop_off_zone) if self.flight.is_helo else None
 
         return AirAssaultLayout(
             departure=builder.takeoff(self.flight.departure),
@@ -135,7 +141,7 @@ class Builder(IBuilder[AirAssaultFlightPlan, AirAssaultLayout]):
                 self.package.waypoints.ingress,
                 self.package.target,
             ),
-            drop_off=builder.dropoff_zone(drop_off_zone),
+            drop_off=dz,
             target=assault_area,
             nav_to_home=builder.nav_path(
                 drop_off_zone.position,
@@ -150,3 +156,7 @@ class Builder(IBuilder[AirAssaultFlightPlan, AirAssaultLayout]):
 
     def build(self) -> AirAssaultFlightPlan:
         return AirAssaultFlightPlan(self.flight, self.layout())
+
+    def _generate_ctld_pickup(self) -> Point:
+        assert isinstance(self.flight.departure, CTLD)
+        return generate_random_ctld_point(self.flight.departure)

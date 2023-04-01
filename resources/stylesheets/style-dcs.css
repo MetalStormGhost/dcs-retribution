@@ -135,12 +135,12 @@ QPushButton[style="btn-success"] , QPushButton[style="start-button"]{
     background-color:#82A466;
     color: white;
     border-radius:2px;
-    font-weight:bold;
-    text-transform:uppercase;
 }
 
 QPushButton[style="start-button"]{
     padding: 8px 30px;
+    font-weight:bold;
+    text-transform:uppercase;
 }
 
 QPushButton[style="btn-success"]:hover , QPushButton[style="start-button"]:hover{
@@ -207,7 +207,6 @@ QPushButton[style="btn-danger"]{
 QPushButton[style="btn-danger"]:hover{
     background-color:#D84545;
 }
-
 
 QPushButton[style="btn-accept"] {
     background-color:#82A466;
@@ -479,7 +478,7 @@ QComboBox QAbstractItemView {
 
 
 /*QSpinBox number input with up down arrows*/
-QSpinBox{
+QSpinBox, QDoubleSpinBox{
     border:1px solid #3B4656;
     color: #fff;
     padding: 4px 10px;
@@ -487,19 +486,19 @@ QSpinBox{
     min-width:40px;
 }
 
-QSpinBox:hover{
+QSpinBox:hover, QDoubleSpinBox:hover{
      border-color: #3592C4;
 }
 
-QSpinBox::up-button , QSpinBox::down-button{
+QSpinBox::up-button , QSpinBox::down-button, QDoubleSpinBox::up-button, QDoubleSpinBox::down-button{
     border:none;
 }
 
-QSpinBox::up-button{
+QSpinBox::up-button, QDoubleSpinBox::up-button{
     image: url(resources/stylesheets/chevron-up.png);
 }
 
-QSpinBox::down-button{
+QSpinBox::down-button, QDoubleSpinBox::down-button{
     image: url(resources/stylesheets/chevron-down.png);
 }
 
@@ -510,7 +509,11 @@ QLineEdit{
     border:1px solid #3B4656;
     background: #465C74;
     color: #fff;
-    margin-bottom:10px;
+}
+
+.tacan-edit {
+    background: #1D2731;
+    text-transform: uppercase;
 }
 
 
@@ -642,4 +645,22 @@ QCalendarWidget QTableView{
     border-width: 2px;
     background-color:lightgrey;
     border: 1px solid black;
+}
+
+/* Plain old classes */
+
+.btn-danger {
+    background-color:#9E3232;
+    color: white;
+    padding: 6px;
+    border-radius:2px;
+    border: 1px solid #9E3232;
+}
+
+.btn-danger:hover {
+    background-color:#D84545;
+}
+
+.comms {
+    padding: 2px;
 }

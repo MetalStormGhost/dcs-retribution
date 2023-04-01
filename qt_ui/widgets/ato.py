@@ -23,6 +23,7 @@ from PySide2.QtWidgets import (
     QPushButton,
     QSplitter,
     QVBoxLayout,
+    QMessageBox,
 )
 
 from game.ato.flight import Flight
@@ -128,6 +129,19 @@ class QFlightList(QListView):
             parent=self.window(),
         )
 
+    def clone_flight(self, index: QModelIndex) -> None:
+        flight = self.package_model.flight_at_index(index)
+        try:
+            clone = Flight.clone_flight(flight)
+        except ValueError as ve:
+            QMessageBox.critical(
+                None,
+                "Can't clone flight!",
+                f"Insufficient aircraft to clone flight:\n\n{ve}",
+            )
+            return
+        self.package_model.add_flight(clone)
+
     def cancel_or_abort_flight(self, index: QModelIndex) -> None:
         self.package_model.cancel_or_abort_flight_at_index(index)
 
@@ -180,8 +194,12 @@ class QFlightPanel(QGroupBox):
         self.edit_button.clicked.connect(self.on_edit)
         self.button_row.addWidget(self.edit_button)
 
+        self.clone_button = QPushButton("Clone")
+        self.clone_button.setProperty("style", "btn-success")
+        self.clone_button.clicked.connect(self.on_clone)
+        self.button_row.addWidget(self.clone_button)
+
         self.delete_button = QPushButton("Cancel")
-        # noinspection PyTypeChecker
         self.delete_button.setProperty("style", "btn-danger")
         self.delete_button.clicked.connect(self.on_cancel_flight)
         self.button_row.addWidget(self.delete_button)
@@ -206,6 +224,7 @@ class QFlightPanel(QGroupBox):
         index = self.flight_list.currentIndex()
         enabled = index.isValid()
         self.edit_button.setEnabled(enabled)
+        self.clone_button.setEnabled(enabled)
         self.delete_button.setEnabled(enabled)
         self.change_map_flight_selection(index)
         delete_text = "Cancel"
@@ -230,6 +249,13 @@ class QFlightPanel(QGroupBox):
             return
         self.flight_list.edit_flight(index)
 
+    def on_clone(self) -> None:
+        index = self.flight_list.currentIndex()
+        if not index.isValid():
+            logging.error(f"Cannot clone flight when no flight is selected.")
+            return
+        self.flight_list.clone_flight(index)
+
     def on_cancel_flight(self) -> None:
         """Removes the selected flight from the package."""
         index = self.flight_list.currentIndex()
@@ -251,7 +277,10 @@ class PackageDelegate(TwoColumnRowDelegate):
     def text_for(self, index: QModelIndex, row: int, column: int) -> str:
         package = self.package(index)
         if (row, column) == (0, 0):
-            return f"{package.package_description} {package.target.name}"
+            string = f"{package.package_description} {package.target.name}"
+            if package.custom_name:
+                string = string + f" ({package.custom_name})"
+            return string
         elif (row, column) == (0, 1):
             clients = self.num_clients(index)
             return f"Player Slots: {clients}" if clients else ""
@@ -305,6 +334,19 @@ class QPackageList(QListView):
         from qt_ui.dialogs import Dialog
 
         Dialog.open_edit_package_dialog(self.ato_model.get_package_model(index))
+
+    def clone_package(self, index: QModelIndex) -> None:
+        package_model = self.ato_model.get_package_model(index)
+        try:
+            clone = Package.clone_package(package_model.package)
+        except ValueError as ve:
+            QMessageBox.critical(
+                None,
+                "Can't clone package!",
+                f"Insufficient aircraft to clone package:\n\n{ve}",
+            )
+            return
+        self.ato_model.add_package(clone)
 
     def delete_package(self, index: QModelIndex) -> None:
         self.ato_model.cancel_or_abort_package_at_index(index)
@@ -370,8 +412,12 @@ class QPackagePanel(QGroupBox):
         self.edit_button.clicked.connect(self.on_edit)
         self.button_row.addWidget(self.edit_button)
 
+        self.clone_button = QPushButton("Clone")
+        self.clone_button.setProperty("style", "btn-success")
+        self.clone_button.clicked.connect(self.on_clone)
+        self.button_row.addWidget(self.clone_button)
+
         self.delete_button = QPushButton("Cancel/abort")
-        # noinspection PyTypeChecker
         self.delete_button.setProperty("style", "btn-danger")
         self.delete_button.clicked.connect(self.on_delete)
         self.button_row.addWidget(self.delete_button)
@@ -389,6 +435,7 @@ class QPackagePanel(QGroupBox):
         index = self.package_list.currentIndex()
         enabled = index.isValid()
         self.edit_button.setEnabled(enabled)
+        self.clone_button.setEnabled(enabled)
         self.delete_button.setEnabled(enabled)
         self.change_map_package_selection(index)
 
@@ -414,6 +461,13 @@ class QPackagePanel(QGroupBox):
             logging.error(f"Cannot edit package when no package is selected.")
             return
         self.package_list.edit_package(index)
+
+    def on_clone(self) -> None:
+        index = self.package_list.currentIndex()
+        if not index.isValid():
+            logging.error(f"Cannot clone package when no package is selected.")
+            return
+        self.package_list.clone_package(index)
 
     def on_delete(self) -> None:
         """Removes the package from the ATO."""

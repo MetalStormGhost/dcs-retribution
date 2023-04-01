@@ -13,19 +13,28 @@ from .flightplans.formation import FormationFlightPlan
 from .flighttype import FlightType
 from .packagewaypoints import PackageWaypoints
 from .traveltime import TotEstimator
+from ..radio.RadioFrequencyContainer import RadioFrequencyContainer
+from ..radio.radios import RadioFrequency
 
 if TYPE_CHECKING:
     from game.theater import ControlPoint, MissionTarget
 
 
-class Package:
+class Package(RadioFrequencyContainer):
     """A mission package."""
 
     def __init__(
-        self, target: MissionTarget, db: Database[Flight], auto_asap: bool = False
+        self,
+        target: MissionTarget,
+        db: Database[Flight],
+        auto_asap: bool = False,
+        custom_name: str | None = None,
+        frequency: RadioFrequency | None = None,
     ) -> None:
         self.target = target
         self._db = db
+        self.frequency = frequency
+        self.custom_name = custom_name
 
         # True if the package ToT should be reset to ASAP whenever the player makes a
         # change. This is really a UI property rather than a game property, but we want
@@ -214,3 +223,12 @@ class Package:
                 if flight.departure == airfield:
                     return airfield
         raise RuntimeError("Could not find any airfield assigned to this package")
+
+    @staticmethod
+    def clone_package(package: Package) -> Package:
+        clone = Package(package.target, package._db, package.auto_asap)
+        clone.time_over_target = package.time_over_target
+        for f in package.flights:
+            cf = Flight.clone_flight(f)
+            clone.add_flight(cf)
+        return clone

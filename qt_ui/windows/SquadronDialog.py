@@ -12,9 +12,15 @@ from PySide2.QtWidgets import (
     QListView,
     QPushButton,
     QVBoxLayout,
+    QInputDialog,
+    QLineEdit,
 )
 
+from game.ato.flightplans.custom import CustomFlightPlan
 from game.ato.flighttype import FlightType
+from game.ato.flightwaypointtype import FlightWaypointType
+from game.server import EventStream
+from game.sim import GameUpdateEvents
 from game.squadrons import Pilot, Squadron
 from game.theater import ConflictTheater, ControlPoint
 from qt_ui.delegates import TwoColumnRowDelegate
@@ -96,7 +102,8 @@ class SquadronDestinationComboBox(QComboBox):
 
         room = squadron.location.unclaimed_parking()
         self.addItem(
-            f"Remain at {squadron.location} (room for {room} more aircraft)", None
+            f"Remain at {squadron.location} (room for {room} more aircraft)",
+            squadron.location,
         )
         selected_index: Optional[int] = None
         for idx, destination in enumerate(sorted(self.iter_destinations(), key=str), 1):
@@ -117,11 +124,14 @@ class SquadronDestinationComboBox(QComboBox):
     def iter_destinations(self) -> Iterator[ControlPoint]:
         size = self.squadron.expected_size_next_turn
         for control_point in self.theater.control_points_for(self.squadron.player):
-            if control_point == self:
+            if control_point == self.squadron.location:
                 continue
             if not control_point.can_operate(self.squadron.aircraft):
                 continue
-            if control_point.unclaimed_parking() < size:
+            if (
+                self.squadron.destination is not control_point
+                and control_point.unclaimed_parking() < size
+            ):
                 continue
             yield control_point
 
@@ -172,6 +182,11 @@ class SquadronDialog(QDialog):
         button_panel.addStretch()
         layout.addLayout(button_panel)
 
+        self.rename_button = QPushButton("Rename pilot")
+        self.rename_button.setProperty("style", "start-button")
+        self.rename_button.clicked.connect(self.rename_pilot)
+        button_panel.addWidget(self.rename_button, alignment=Qt.AlignRight)
+
         self.toggle_ai_button = QPushButton()
         self.reset_ai_toggle_state(self.pilot_list.currentIndex())
         self.toggle_ai_button.setProperty("style", "start-button")
@@ -188,11 +203,26 @@ class SquadronDialog(QDialog):
     def squadron(self) -> Squadron:
         return self.squadron_model.squadron
 
+    def _instant_relocate(self, destination: ControlPoint) -> None:
+        self.squadron.relocate_to(destination)
+        for _, f in self.squadron.flight_db.objects.items():
+            if f.squadron == self.squadron:
+                if isinstance(f.flight_plan, CustomFlightPlan):
+                    for wpt in f.flight_plan.waypoints:
+                        if wpt.waypoint_type == FlightWaypointType.LANDING_POINT:
+                            wpt.control_point = destination
+                            wpt.position = wpt.control_point.position
+                            break
+                f.recreate_flight_plan()
+                EventStream.put_nowait(GameUpdateEvents().update_flight(f))
+
     def on_destination_changed(self, index: int) -> None:
         with report_errors("Could not change squadron destination", self):
             destination = self.transfer_destination.itemData(index)
-            if destination is None:
+            if destination is self.squadron.location:
                 self.squadron.cancel_relocation()
+            elif self.ato_model.game.settings.enable_transfer_cheat:
+                self._instant_relocate(destination)
             else:
                 self.squadron.plan_relocation(destination)
             self.ato_model.replace_from_game(player=True)
@@ -210,6 +240,18 @@ class SquadronDialog(QDialog):
             button.setDisabled(True)
             return True
         return False
+
+    def rename_pilot(self) -> None:
+        index = self.pilot_list.currentIndex()
+        if not index.isValid():
+            logging.error("Cannot toggle player/AI: no pilot is selected")
+            return
+        p = self.squadron_model.pilot_at_index(index)
+        text, ok = QInputDialog.getText(
+            self, "Rename pilot", "New name: ", QLineEdit.EchoMode.Normal
+        )
+        if ok:
+            p.name = text
 
     def toggle_ai(self) -> None:
         index = self.pilot_list.currentIndex()

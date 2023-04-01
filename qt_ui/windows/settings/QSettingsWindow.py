@@ -60,6 +60,10 @@ class CheatSettingsBox(QGroupBox):
         )
         self.base_capture_cheat_checkbox.toggled.connect(apply_settings)
 
+        self.transfer_cheat_checkbox = QCheckBox()
+        self.transfer_cheat_checkbox.setChecked(game.settings.enable_transfer_cheat)
+        self.transfer_cheat_checkbox.toggled.connect(apply_settings)
+
         self.red_ato = QLabeledWidget("Show Red ATO:", self.red_ato_checkbox)
         self.main_layout.addLayout(self.red_ato)
         self.frontline_cheat = QLabeledWidget(
@@ -70,6 +74,10 @@ class CheatSettingsBox(QGroupBox):
             "Enable Base Capture Cheat:", self.base_capture_cheat_checkbox
         )
         self.main_layout.addLayout(self.base_capture_cheat)
+        self.transfer_cheat = QLabeledWidget(
+            "Enable Instant Squadron Transfer Cheat:", self.transfer_cheat_checkbox
+        )
+        self.main_layout.addLayout(self.transfer_cheat)
 
     @property
     def show_red_ato(self) -> bool:
@@ -82,6 +90,10 @@ class CheatSettingsBox(QGroupBox):
     @property
     def show_base_capture_cheat(self) -> bool:
         return self.base_capture_cheat_checkbox.isChecked()
+
+    @property
+    def show_transfer_cheat(self) -> bool:
+        return self.transfer_cheat_checkbox.isChecked()
 
 
 class AutoSettingsLayout(QGridLayout):
@@ -220,11 +232,9 @@ class AutoSettingsPageLayout(QVBoxLayout):
         self.setAlignment(Qt.AlignTop)
 
         for section in Settings.sections(page):
-            gbox = AutoSettingsGroup(page, section, settings, write_full_settings)
-            scroll = QScrollArea()
-            scroll.setWidget(gbox)
-            scroll.setWidgetResizable(True)
-            self.addWidget(scroll)
+            self.addWidget(
+                AutoSettingsGroup(page, section, settings, write_full_settings)
+            )
 
 
 class AutoSettingsPage(QWidget):
@@ -253,7 +263,7 @@ class QSettingsWindow(QDialog):
         self.setModal(True)
         self.setWindowTitle("Settings")
         self.setWindowIcon(CONST.ICONS["Settings"])
-        self.setMinimumSize(600, 250)
+        self.setMinimumSize(840, 480)
 
         self.initUi()
 
@@ -278,7 +288,10 @@ class QSettingsWindow(QDialog):
             page_item.setEditable(False)
             page_item.setSelectable(True)
             self.categoryModel.appendRow(page_item)
-            self.right_layout.addWidget(page)
+            scroll = QScrollArea()
+            scroll.setWidget(page)
+            scroll.setWidgetResizable(True)
+            self.right_layout.addWidget(scroll)
 
         self.initCheatLayout()
         cheat = QStandardItem("Cheat Menu")
@@ -302,7 +315,10 @@ class QSettingsWindow(QDialog):
         pluginsOptions.setEditable(False)
         pluginsOptions.setSelectable(True)
         self.categoryModel.appendRow(pluginsOptions)
-        self.right_layout.addWidget(self.pluginsOptionsPage)
+        scroll = QScrollArea()
+        scroll.setWidget(self.pluginsOptionsPage)
+        scroll.setWidgetResizable(True)
+        self.right_layout.addWidget(scroll)
 
         self.categoryList.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.categoryList.setModel(self.categoryModel)
@@ -319,7 +335,6 @@ class QSettingsWindow(QDialog):
         self.setLayout(self.layout)
 
     def initCheatLayout(self):
-
         self.cheatPage = QWidget()
         self.cheatLayout = QVBoxLayout()
         self.cheatPage.setLayout(self.cheatLayout)
@@ -359,6 +374,9 @@ class QSettingsWindow(QDialog):
         )
         self.game.settings.enable_base_capture_cheat = (
             self.cheat_options.show_base_capture_cheat
+        )
+        self.game.settings.enable_transfer_cheat = (
+            self.cheat_options.show_transfer_cheat
         )
 
         events = GameUpdateEvents()

@@ -2,12 +2,10 @@
   "country": "Combined Joint Task Forces Red",
   "name": "WRL - Task Force Red",
   "authors": "HolyOrangeJuice",
-  "description": "<p>A generic blufor faction which is similar to the Blufor Modern preset. This meets the needs of the We Run Liberation group. werunliberation.com.</p>",
-  "locales": [
-    "ru_RU"
-  ],
+  "description": "<p>A generic redfor faction for WRL missions. This meets the needs of the We Run Liberation group. <a style=\"color: white\" href=\"https://werunliberation.com\">werunliberation.com</a>.</p>",
   "aircrafts": [
     "MiG-19P Farmer-B",
+    "AJS-37 Viggen",
     "L-39ZA Albatros",
     "MiG-21bis Fishbed-N",
     "MiG-23MLD Flogger-K",
@@ -19,25 +17,43 @@
     "Su-24M Fencer-D",  	
     "Su-27 Flanker-B",
     "Su-30 Flanker-C",
+    "Su-30MKA Flanker-H",
+    "Su-30MKI Flanker-H",
+    "Su-30MKM Flanker-H",
+    "Su-30SM Flanker-H",
     "Su-33 Flanker-D",
     "Su-34 Fullback",
     "Su-25 Frogfoot",
     "Su-25T Frogfoot",
     "F-4E Phantom II",
     "F-5E Tiger II",
+    "F-14A Tomcat (Block 135-GR Late)",
+    "F-15C Eagle",
+    "F-16CM Fighting Falcon (Block 50)",
+    "JF-17 Thunder",
+    "Tornado IDS",
+    "Tornado GR4",
+    "Mirage 2000C",
     "Mirage-F1CE",
+    "Mirage-F1B",
+    "Mirage-F1BE",
+    "Mirage-F1C-200",
+    "Mirage-F1CT",
+    "Mirage-F1EE",
+    "Mirage-F1M-CE",
+    "Mirage-F1M-EE",
     "Tu-142 Bear-F",
     "Tu-160 Blackjack",
     "Tu-22M3 Backfire-C",
     "Tu-95MS Bear-H",
     "Ka-50 Hokum",
+    "Ka-50 Hokum III",
     "Mi-24V Hind-E",
     "Mi-24P Hind-F",
     "Mi-28N Havoc",
     "Mi-8MTV2 Hip",
     "SA 342L Gazelle",
     "SA 342M Gazelle",
-    "SA 342M Gazelle Mistral",
     "UH-1H Iroquois"
   ],
   "awacs": [
@@ -66,10 +82,7 @@
     "ZSU-23-4 Shilka"
   ],
   "artillery_units": [
-    "2S19 Msta-S",
-    "2S9 Nona-S",
-    "BM-27 Uragan",
-    "BM-30 Smerch (9M55K5 HE Rockets)"
+    "2S19 Msta-S"
   ],
   "logistics_units": [
     "LUV UAZ-469 Jeep",
@@ -78,21 +91,29 @@
   "infantry_units": [
     "Infantry AK-74 Rus",
     "MANPADS SA-18 Igla-S \"Grouse\"",
-    "Mortar 2B11 120mm",
     "Paratrooper AKS",
     "Paratrooper RPG-16"
   ],
-"missiles": [
+  "missiles": [
     "SSM SS-1C Scud-B"
   ],
   "preset_groups": [
     "SA-2/S-75",
+    "SA-2/S-75 V-759/5V23",
     "SA-3/S-125",
+    "SA-3/S-125 V-601P/5V27",
     "SA-6",
     "SA-11",
     "SA-10/S-300PS",
     "SA-10B/S-300PS",
     "Silkworm",
+    "SA-17",
+    "SA-12/S-300V",
+    "SA-20/S-300PMU-1",
+    "SA-20B/S-300PMU-2",
+    "SA-23/S-300VM",
+    "Cold-War-Flak",
+    "KS-19/SON-9",
     "Russian Navy"
   ],
   "naval_units": [

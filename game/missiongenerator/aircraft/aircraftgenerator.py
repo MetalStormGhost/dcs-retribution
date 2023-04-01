@@ -29,6 +29,7 @@ from game.settings import Settings
 from game.theater.controlpoint import (
     Airfield,
     ControlPoint,
+    Fob,
 )
 from game.unitmap import UnitMap
 from .aircraftpainter import AircraftPainter
@@ -104,7 +105,9 @@ class AircraftGenerator:
             ato: The ATO to spawn aircraft for.
             dynamic_runways: Runway data for carriers and FARPs.
         """
-        for package in ato.packages:
+        self._reserve_frequencies_and_tacan(ato)
+
+        for package in reversed(sorted(ato.packages, key=lambda x: x.time_over_target)):
             if not package.flights:
                 continue
             for flight in package.flights:
@@ -115,8 +118,10 @@ class AircraftGenerator:
                     )
                     self.unit_map.add_aircraft(group, flight)
             if (
-                package.primary_task == FlightType.STRIKE
-                and package.primary_flight is not None
+                package.primary_flight is not None
+                and package.primary_flight.flight_plan.is_formation(
+                    package.primary_flight.flight_plan
+                )
             ):
                 splittrigger = TriggerOnce(Event.NoEvent, f"Split-{id(package)}")
                 splittrigger.add_condition(FlagIsTrue(flag=f"split-{id(package)}"))
@@ -124,9 +129,13 @@ class AircraftGenerator:
                 splittrigger.add_condition(FlagIsFalse(flag=f"split-{id(package)}"))
                 splittrigger.add_condition(GroupDead(package.primary_flight.group_id))
                 for flight in package.flights:
-                    if flight is not package.primary_flight:
+                    if flight.flight_type in [
+                        FlightType.ESCORT,
+                        FlightType.SEAD_ESCORT,
+                    ]:
                         splittrigger.add_action(AITaskPush(flight.group_id, 1))
-                self.mission.triggerrules.triggers.append(splittrigger)
+                if len(splittrigger.actions) > 0:
+                    self.mission.triggerrules.triggers.append(splittrigger)
 
     def spawn_unused_aircraft(
         self, player_country: Country, enemy_country: Country
@@ -168,7 +177,7 @@ class AircraftGenerator:
             flight.state = Completed(flight, self.game.settings)
 
             group = FlightGroupSpawner(
-                flight, country, self.mission, self.helipads
+                flight, country, self.mission, self.helipads, self.mission_data
             ).create_idle_aircraft()
             AircraftPainter(flight, group).apply_livery()
             self.unit_map.add_aircraft(group, flight)
@@ -178,7 +187,7 @@ class AircraftGenerator:
     ) -> FlyingGroup[Any]:
         """Creates and configures the flight group in the mission."""
         group = FlightGroupSpawner(
-            flight, country, self.mission, self.helipads
+            flight, country, self.mission, self.helipads, self.mission_data
         ).create_flight_group()
         self.flights.append(
             FlightGroupConfigurator(
@@ -195,4 +204,27 @@ class AircraftGenerator:
                 self.use_client,
             ).configure()
         )
+
+        wpt = group.waypoint("LANDING")
+        if flight.is_helo and isinstance(flight.arrival, Fob) and wpt:
+            hpad = self.helipads[flight.arrival].units.pop(0)
+            wpt.helipad_id = hpad.id
+            wpt.link_unit = hpad.id
+            self.helipads[flight.arrival].units.append(hpad)
+
         return group
+
+    def _reserve_frequencies_and_tacan(self, ato: AirTaskingOrder) -> None:
+        for package in ato.packages:
+            if package.frequency is None:
+                continue
+            if package.frequency not in self.radio_registry.allocated_channels:
+                self.radio_registry.reserve(package.frequency)
+            for f in package.flights:
+                if (
+                    f.frequency
+                    and f.frequency not in self.radio_registry.allocated_channels
+                ):
+                    self.radio_registry.reserve(f.frequency)
+                if f.tacan and f.tacan not in self.tacan_registy.allocated_channels:
+                    self.tacan_registy.mark_unavailable(f.tacan)

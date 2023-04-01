@@ -1,15 +1,26 @@
 from __future__ import unicode_literals
 
 import logging
+from copy import deepcopy
 from datetime import datetime, timedelta
 from typing import List
 
 from PySide2 import QtGui, QtWidgets
 from PySide2.QtCore import QDate, QItemSelectionModel, QPoint, Qt, Signal
-from PySide2.QtWidgets import QCheckBox, QLabel, QTextEdit, QVBoxLayout
+from PySide2.QtWidgets import (
+    QCheckBox,
+    QLabel,
+    QTextEdit,
+    QVBoxLayout,
+    QTextBrowser,
+    QWidget,
+    QGridLayout,
+    QScrollArea,
+)
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from game.campaignloader.campaign import Campaign, DEFAULT_BUDGET
+from game.dcs.aircrafttype import AircraftType
 from game.factions import FACTIONS, Faction
 from game.settings import Settings
 from game.theater.start_generator import GameGenerator, GeneratorSettings, ModSettings
@@ -93,6 +104,7 @@ class NewGameWizard(QtWidgets.QWizard):
         self.addPage(self.faction_selection_page)
         self.addPage(GeneratorOptions())
         self.difficulty_page = DifficultyAndAutomationOptions()
+        self.difficulty_page.set_campaign_values(self.campaigns[0])
 
         # Update difficulty page on campaign select
         self.theater_page.campaign_selected.connect(
@@ -143,6 +155,8 @@ class NewGameWizard(QtWidgets.QWizard):
             automate_aircraft_reinforcements=self.field("automate_aircraft_purchases"),
             supercarrier=self.field("supercarrier"),
             max_frontline_length=campaign.data.get("max_frontline_length", 80),
+            perf_culling=campaign.data.get("culling_exclusion_radius") is not None,
+            perf_culling_distance=campaign.data.get("culling_exclusion_radius", 100),
         )
         generator_settings = GeneratorSettings(
             start_date=start_date,
@@ -157,13 +171,15 @@ class NewGameWizard(QtWidgets.QWizard):
             no_lha=self.field("no_lha"),
             no_player_navy=self.field("no_player_navy"),
             no_enemy_navy=self.field("no_enemy_navy"),
+            tgo_config=campaign.load_ground_forces_config(),
         )
         mod_settings = ModSettings(
             a4_skyhawk=self.field("a4_skyhawk"),
             a6a_intruder=self.field("a6a_intruder"),
-            f4b_phantom=self.field("f4b_phantom"),
+            f4bc_phantom=self.field("f4bc_phantom"),
             f15d_baz=self.field("f15d_baz"),
             f_16_idf=self.field("f_16_idf"),
+            fa_18efg=self.field("fa_18efg"),
             f22_raptor=self.field("f22_raptor"),
             f84g_thunderjet=self.field("f84g_thunderjet"),
             f100_supersabre=self.field("f100_supersabre"),
@@ -177,6 +193,7 @@ class NewGameWizard(QtWidgets.QWizard):
             ov10a_bronco=self.field("ov10a_bronco"),
             frenchpack=self.field("frenchpack"),
             high_digit_sams=self.field("high_digit_sams"),
+            swedishmilitaryassetspack=self.field("swedishmilitaryassetspack"),
         )
 
         blue_faction = self.faction_selection_page.selected_blue_faction
@@ -201,6 +218,11 @@ class NewGameWizard(QtWidgets.QWizard):
         self.generatedGame = generator.generate()
 
         AirWingConfigurationDialog(self.generatedGame, self).exec_()
+
+        g = self.generatedGame
+        herc = AircraftType.named("C-130J-30 Super Hercules")
+        if herc in g.blue.air_wing.squadrons or herc in g.red.air_wing.squadrons:
+            g.settings.set_plugin_option("herculescargo", True)
 
         self.generatedGame.begin_turn_0()
 
@@ -228,6 +250,87 @@ class IntroPage(QtWidgets.QWizardPage):
         self.setLayout(layout)
 
 
+class QFactionUnits(QScrollArea):
+    def __init__(self, faction: Faction, parent=None):
+        super().__init__()
+        self.setWidgetResizable(True)
+        self.content = QWidget()
+        self.setWidget(self.content)
+        self.parent = parent
+        self.faction = faction
+        self._create_checkboxes()
+
+    def _add_checkboxes(self, units: list, counter: int, grid: QGridLayout) -> int:
+        counter += 1
+        for i, v in enumerate(sorted(units, key=lambda x: x.name), counter):
+            cb = QCheckBox(v.name)
+            cb.setCheckState(Qt.CheckState.Checked)
+            self.checkboxes[v.name] = cb
+            grid.addWidget(cb, i, 1)
+            counter += 1
+        counter += 1
+        return counter
+
+    def _create_checkboxes(self):
+        counter = 0
+        self.checkboxes: dict[str, QCheckBox] = {}
+        grid = QGridLayout()
+        if len(self.faction.aircraft) > 0:
+            grid.addWidget(QLabel("<strong>Aircraft:</strong>"), counter, 0)
+            counter = self._add_checkboxes(self.faction.aircraft, counter, grid)
+        if len(self.faction.awacs) > 0:
+            grid.addWidget(QLabel("<strong>AWACS:</strong>"), counter, 0)
+            counter = self._add_checkboxes(self.faction.awacs, counter, grid)
+        if len(self.faction.tankers) > 0:
+            grid.addWidget(QLabel("<strong>Tankers:</strong>"), counter, 0)
+            counter = self._add_checkboxes(self.faction.tankers, counter, grid)
+        if len(self.faction.frontline_units) > 0:
+            grid.addWidget(QLabel("<strong>Frontlines vehicles:</strong>"), counter, 0)
+            counter = self._add_checkboxes(self.faction.frontline_units, counter, grid)
+        if len(self.faction.artillery_units) > 0:
+            grid.addWidget(QLabel("<strong>Artillery units:</strong>"), counter, 0)
+            counter = self._add_checkboxes(self.faction.artillery_units, counter, grid)
+        if len(self.faction.logistics_units) > 0:
+            grid.addWidget(QLabel("<strong>Logistics units:</strong>"), counter, 0)
+            counter = self._add_checkboxes(self.faction.logistics_units, counter, grid)
+        if len(self.faction.infantry_units) > 0:
+            grid.addWidget(QLabel("<strong>Infantry units:</strong>"), counter, 0)
+            counter = self._add_checkboxes(self.faction.infantry_units, counter, grid)
+        if len(self.faction.preset_groups) > 0:
+            grid.addWidget(QLabel("<strong>Preset groups:</strong>"), counter, 0)
+            counter = self._add_checkboxes(self.faction.preset_groups, counter, grid)
+        if len(self.faction.air_defense_units) > 0:
+            grid.addWidget(QLabel("<strong>Air defenses:</strong>"), counter, 0)
+            counter = self._add_checkboxes(
+                self.faction.air_defense_units, counter, grid
+            )
+        if len(self.faction.naval_units) > 0:
+            grid.addWidget(QLabel("<strong>Naval units:</strong>"), counter, 0)
+            counter = self._add_checkboxes(self.faction.naval_units, counter, grid)
+        if len(self.faction.missiles) > 0:
+            grid.addWidget(QLabel("<strong>Missile units:</strong>"), counter, 0)
+            self._add_checkboxes(self.faction.missiles, counter, grid)
+
+        self.content.setLayout(grid)
+
+    def updateFaction(self, faction: Faction):
+        self.faction = faction
+        self.content = QWidget()
+        self.setWidget(self.content)
+        self._create_checkboxes()
+        self.update()
+        if self.parent:
+            self.parent.update()
+
+    def updateFactionUnits(self, units: list):
+        deletes = []
+        for a in units:
+            if not self.checkboxes[a.name].isChecked():
+                deletes.append(a)
+        for d in deletes:
+            units.remove(d)
+
+
 class FactionSelection(QtWidgets.QWizardPage):
     def __init__(self, parent=None):
         super(FactionSelection, self).__init__(parent)
@@ -251,8 +354,6 @@ class FactionSelection(QtWidgets.QWizardPage):
 
         blueFaction = QtWidgets.QLabel("<b>Player Faction :</b>")
         self.blueFactionSelect = QtWidgets.QComboBox()
-        for f in FACTIONS:
-            self.blueFactionSelect.addItem(f)
         blueFaction.setBuddy(self.blueFactionSelect)
 
         redFaction = QtWidgets.QLabel("<b>Enemy Faction :</b>")
@@ -260,27 +361,44 @@ class FactionSelection(QtWidgets.QWizardPage):
         redFaction.setBuddy(self.redFactionSelect)
 
         # Faction description
-        self.blueFactionDescription = QTextEdit("")
+        self.blueFactionDescription = QTextBrowser()
         self.blueFactionDescription.setReadOnly(True)
+        self.blueFactionDescription.setOpenExternalLinks(True)
+        self.blueFactionDescription.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.blueFactionDescription.setMaximumHeight(120)
 
-        self.redFactionDescription = QTextEdit("")
+        self.redFactionDescription = QTextBrowser()
         self.redFactionDescription.setReadOnly(True)
+        self.redFactionDescription.setOpenExternalLinks(True)
+        self.redFactionDescription.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.redFactionDescription.setMaximumHeight(120)
 
         # Setup default selected factions
         for i, r in enumerate(FACTIONS):
-            self.redFactionSelect.addItem(r)
+            self.blueFactionSelect.addItem(r, FACTIONS[r])
+            self.redFactionSelect.addItem(r, FACTIONS[r])
             if r == "Russia 1990":
                 self.redFactionSelect.setCurrentIndex(i)
             if r == "USA 2005":
                 self.blueFactionSelect.setCurrentIndex(i)
 
+        # Faction units
+        self.blueFactionUnits = QFactionUnits(
+            self.blueFactionSelect.currentData(), self.blueGroupLayout
+        )
+        self.redFactionUnits = QFactionUnits(
+            self.redFactionSelect.currentData(), self.redGroupLayout
+        )
+
         self.blueGroupLayout.addWidget(blueFaction, 0, 0)
         self.blueGroupLayout.addWidget(self.blueFactionSelect, 0, 1)
         self.blueGroupLayout.addWidget(self.blueFactionDescription, 1, 0, 1, 2)
+        self.blueGroupLayout.addWidget(self.blueFactionUnits, 2, 0, 1, 2)
 
         self.redGroupLayout.addWidget(redFaction, 0, 0)
         self.redGroupLayout.addWidget(self.redFactionSelect, 0, 1)
         self.redGroupLayout.addWidget(self.redFactionDescription, 1, 0, 1, 2)
+        self.redGroupLayout.addWidget(self.redFactionUnits, 2, 0, 1, 2)
 
         self.factionsGroupLayout.addLayout(self.blueGroupLayout)
         self.factionsGroupLayout.addLayout(self.redGroupLayout)
@@ -326,7 +444,6 @@ class FactionSelection(QtWidgets.QWizardPage):
         self.updateUnitRecap()
 
     def updateUnitRecap(self):
-
         red_faction = FACTIONS[self.redFactionSelect.currentText()]
         blue_faction = FACTIONS[self.blueFactionSelect.currentText()]
 
@@ -338,13 +455,36 @@ class FactionSelection(QtWidgets.QWizardPage):
         self.blueFactionDescription.setText(blue_faction_txt)
         self.redFactionDescription.setText(red_faction_txt)
 
+        self.blueGroupLayout.removeWidget(self.blueFactionUnits)
+        self.blueFactionUnits.updateFaction(blue_faction)
+        self.blueGroupLayout.addWidget(self.blueFactionUnits, 2, 0, 1, 2)
+        self.redGroupLayout.removeWidget(self.redFactionUnits)
+        self.redFactionUnits.updateFaction(red_faction)
+        self.redGroupLayout.addWidget(self.redFactionUnits, 2, 0, 1, 2)
+
+    @staticmethod
+    def _filter_selected_units(qfu: QFactionUnits) -> Faction:
+        fac = deepcopy(qfu.faction)
+        qfu.updateFactionUnits(fac.aircrafts)
+        qfu.updateFactionUnits(fac.awacs)
+        qfu.updateFactionUnits(fac.tankers)
+        qfu.updateFactionUnits(fac.frontline_units)
+        qfu.updateFactionUnits(fac.artillery_units)
+        qfu.updateFactionUnits(fac.logistics_units)
+        qfu.updateFactionUnits(fac.infantry_units)
+        qfu.updateFactionUnits(fac.preset_groups)
+        qfu.updateFactionUnits(fac.air_defense_units)
+        qfu.updateFactionUnits(fac.naval_units)
+        qfu.updateFactionUnits(fac.missiles)
+        return fac
+
     @property
     def selected_blue_faction(self) -> Faction:
-        return FACTIONS[self.blueFactionSelect.currentText()]
+        return self._filter_selected_units(self.blueFactionUnits)
 
     @property
     def selected_red_faction(self) -> Faction:
-        return FACTIONS[self.redFactionSelect.currentText()]
+        return self._filter_selected_units(self.redFactionUnits)
 
 
 class TheaterConfiguration(QtWidgets.QWizardPage):
@@ -386,8 +526,9 @@ class TheaterConfiguration(QtWidgets.QWizardPage):
         self.registerField("selectedCampaign", self.campaignList)
 
         # Faction description
-        self.campaignMapDescription = QTextEdit("")
+        self.campaignMapDescription = QTextBrowser()
         self.campaignMapDescription.setReadOnly(True)
+        self.campaignMapDescription.setOpenExternalLinks(True)
         self.campaignMapDescription.setMaximumHeight(200)
 
         self.performanceText = QTextEdit("")
@@ -667,12 +808,14 @@ class GeneratorOptions(QtWidgets.QWizardPage):
         self.registerField("hercules", hercules)
         uh_60l = QtWidgets.QCheckBox()
         self.registerField("uh_60l", uh_60l)
-        f4b_phantom = QtWidgets.QCheckBox()
-        self.registerField("f4b_phantom", f4b_phantom)
+        f4bc_phantom = QtWidgets.QCheckBox()
+        self.registerField("f4bc_phantom", f4bc_phantom)
         f15d_baz = QtWidgets.QCheckBox()
         self.registerField("f15d_baz", f15d_baz)
         f_16_idf = QtWidgets.QCheckBox()
         self.registerField("f_16_idf", f_16_idf)
+        fa_18efg = QtWidgets.QCheckBox()
+        self.registerField("fa_18efg", fa_18efg)
         f22_raptor = QtWidgets.QCheckBox()
         self.registerField("f22_raptor", f22_raptor)
         f84g_thunderjet = QtWidgets.QCheckBox()
@@ -695,6 +838,8 @@ class GeneratorOptions(QtWidgets.QWizardPage):
         self.registerField("frenchpack", frenchpack)
         high_digit_sams = QtWidgets.QCheckBox()
         self.registerField("high_digit_sams", high_digit_sams)
+        swedishmilitaryassetspack = QtWidgets.QCheckBox()
+        self.registerField("swedishmilitaryassetspack", swedishmilitaryassetspack)
 
         modHelpText = QtWidgets.QLabel(
             "<p>Select the mods you have installed. If your chosen factions support them, you'll be able to use these mods in your campaign.</p>"
@@ -705,19 +850,21 @@ class GeneratorOptions(QtWidgets.QWizardPage):
         modLayout_row = 1
 
         mod_pairs = [
-            ("A-4E Skyhawk (v2.0.0)", a4_skyhawk),
+            ("A-4E Skyhawk (v2.1.0)", a4_skyhawk),
             ("A-6A Intruder (v2.7.5.01)", a6a_intruder),
             ("C-130J-30 Super Hercules", hercules),
-            ("F-4B Phantom II (v2.7.10.02 EFM + Patch 2022.10.02)", f4b_phantom),
+            ("F-4B/C Phantom II (v2.8.1.01 Standalone + 29Jan23 Patch)", f4bc_phantom),
             ("F-15D Baz (v1.0)", f15d_baz),
-            ("F-16I Sufa & F-16D (v2.2 by IDF Mods Project)", f_16_idf),
+            ("F-16I Sufa & F-16D (v3.2 by IDF Mods Project)", f_16_idf),
+            ("F/A-18E/F/G Super Hornet (version 2.1)", fa_18efg),
             ("F-22A Raptor", f22_raptor),
             ("F-84G Thunderjet (v2.5.7.01)", f84g_thunderjet),
-            ("F-100 Super Sabre (v2.7.18.30765 patch 09.10.22)", f100_supersabre),
+            ("F-100 Super Sabre (v2.7.18.30765 patch 20.10.22)", f100_supersabre),
             ("F-104 Starfighter (v2.7.11.222.01)", f104_starfighter),
             ("F-105 Thunderchief (v2.7.12.23x)", f105_thunderchief),
             ("Frenchpack", frenchpack),
             ("High Digit SAMs", high_digit_sams),
+            ("Swedish Military Assets pack (1.10)", swedishmilitaryassetspack),
             ("JAS 39 Gripen (v1.8.0-beta)", jas39_gripen),
             ("OV-10A Bronco", ov10a_bronco),
             ("Su-30 Flanker-H (V2.01B)", su30_flanker_h),

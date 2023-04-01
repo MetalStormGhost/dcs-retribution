@@ -404,6 +404,7 @@ class QLiberationWindow(QMainWindow):
                 self.info_panel.setGame(game)
             self.sim_controller.set_game(game)
             self.game_model.set(self.game)
+            self.game_model.init_comms_registry()
         except AttributeError:
             logging.exception("Incompatible save game")
             QMessageBox.critical(
@@ -530,6 +531,7 @@ class QLiberationWindow(QMainWindow):
         logging.info("On Debriefing")
         self.debriefing = QDebriefingWindow(debrief)
         self.debriefing.show()
+        self.game_model.init_comms_registry()
 
     def open_tgo_info_dialog(self, tgo: TheaterGroundObject) -> None:
         QGroundObjectMenu(self, tgo, tgo.control_point, self.game).show()
@@ -539,7 +541,7 @@ class QLiberationWindow(QMainWindow):
         self._cp_dialog.show()
 
     def _qsettings(self) -> QSettings:
-        return QSettings("DCS Liberation", "Qt UI")
+        return QSettings("DCS Retribution", "Qt UI")
 
     def _restore_window_geometry(self) -> None:
         settings = self._qsettings()

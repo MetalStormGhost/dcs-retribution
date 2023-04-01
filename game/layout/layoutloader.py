@@ -31,7 +31,7 @@ from game.profiling import logged_duration
 from game.version import VERSION
 
 LAYOUT_DIR = "resources/layouts/"
-LAYOUT_DUMP = "Liberation/layouts.p"
+LAYOUT_DUMP = "Retribution/layouts.p"
 
 LAYOUT_TYPES = {
     GroupRole.AIR_DEFENSE: AntiAirLayout,
@@ -132,7 +132,6 @@ class LayoutLoader:
                     temp_mis.country(country.name).ship_group,
                     temp_mis.country(country.name).static_group,
                 ):
-
                     try:
                         g_id, u_id, group_name, group_mapping = mapping.group_for_name(
                             dcs_group.name

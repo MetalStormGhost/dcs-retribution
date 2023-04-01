@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 MAJOR_VERSION = 1
-MINOR_VERSION = 0
+MINOR_VERSION = 2
 MICRO_VERSION = 0
 
 
@@ -167,4 +167,16 @@ VERSION = _build_version_string()
 #:
 #: Version 10.4
 #: * Support for the Falklands.
-CAMPAIGN_FORMAT_VERSION = (10, 4)
+#:
+#: Version 10.5
+#: * Support for scenery objectives defined by quad zones.
+#: * Campaign designers can now define more settings:
+#:    `max_frontline_length: 25`        (in km)
+#:    `culling_exclusion_radius: 35`    (in km)
+#:
+#: Version 10.6
+#: * Designated CTLD zones for ControlPoints (Airbases & FOBs/FARPs)
+#: * 'ground_forces' in yaml file to specify preset groups for TGOs,
+#:      given the group is available for the faction and the task matches
+
+CAMPAIGN_FORMAT_VERSION = (10, 6)

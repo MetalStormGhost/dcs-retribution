@@ -2,7 +2,7 @@
   "country": "Combined Joint Task Forces Blue",
   "name": "WRL - Task Force Blue",
   "authors": "HolyOrangeJuice",
-  "description": "<p>A generic blufor faction which is similar to the Blufor Modern preset. This meets the needs of the We Run Liberation group. werunliberation.com.</p>",
+  "description": "<p>A generic blufor faction for WRL missions. This meets the needs of the We Run Liberation group. <a style=\"color: white\" href=\"https://werunliberation.com\">werunliberation.com</a>.</p>",
   "aircrafts": [
     "MiG-21bis Fishbed-N",
     "F-5E Tiger II",
@@ -29,6 +29,7 @@
     "Mirage 2000C",
     "AH-64D Apache Longbow",
     "Ka-50 Hokum",
+    "Ka-50 Hokum III",
     "Mi-24P Hind-F",
     "Mi-8MTV2 Hip",
     "SA 342L Gazelle",
@@ -43,7 +44,29 @@
     "F-117A Nighthawk",
     "AH-1W SuperCobra",		
     "SH-60B Seahawk",
-    "AH-64D Apache Longbow (AI)"
+    "A-4E Skyhawk",
+    "AH-64D Apache Longbow (AI)",
+    "C-130",
+    "C-130J-30 Super Hercules",
+    "F-15D Baz",
+    "F-15E Strike Eagle",
+    "F-16A MLU",
+	"F-16D Fighting Falcon (Block 52+)",
+	"F-16D Fighting Falcon (Block 52)",
+	"F-16D Fighting Falcon (Block 50+)",
+	"F-16D Fighting Falcon (Block 50)",
+    "F-22A Raptor",
+    "Mirage-F1B",
+    "Mirage-F1BE",
+    "Mirage-F1C-200",
+    "Mirage-F1CT",
+    "Mirage-F1EE",
+    "Mirage-F1M-CE",
+    "Mirage-F1M-EE",
+    "Su-30MKA Flanker-H",
+    "Su-30MKI Flanker-H",
+    "Su-30MKM Flanker-H",
+    "Su-30SM Flanker-H"
   ],
   "awacs": [
     "E-2D Advanced Hawkeye",
@@ -60,6 +83,8 @@
     "M1043 HMMWV (M2 HMG)",
     "M1045 HMMWV (BGM-71 TOW)",
     "M1097 Heavy HMMWV Avenger",
+    "M48 Chaparral",
+    "M163 Vulcan Air Defense System",
     "M1126 Stryker ICV (M2 HMG)",
     "M1128 Stryker Mobile Gun System",
     "M1134 Stryker ATGM (BGM-71 TOW)",
@@ -68,8 +93,7 @@
     "M6 Linebacker"
   ],
   "artillery_units": [
-    "M109A6 Paladin",
-    "M270 Multiple Launch Rocket System"
+    "M109A6 Paladin"
   ],
   "logistics_units": [
     "Truck M818 6x6"

@@ -60,7 +60,7 @@ class Faction:
     description: str = field(default="")
 
     # Available aircraft
-    aircrafts: List[AircraftType] = field(default_factory=list)
+    aircraft: List[AircraftType] = field(default_factory=list)
 
     # Available awacs aircraft
     awacs: List[AircraftType] = field(default_factory=list)
@@ -178,6 +178,10 @@ class Faction:
         )
         return sorted(air_defenses)
 
+    @cached_property
+    def aircrafts(self) -> list[UnitType[Any]]:
+        return list(self.aircraft + self.awacs + self.tankers)
+
     @classmethod
     def from_json(cls: Type[Faction], json: Dict[str, Any]) -> Faction:
         faction = Faction(locales=json.get("locales"))
@@ -206,13 +210,9 @@ class Faction:
         faction.authors = json.get("authors", "")
         faction.description = json.get("description", "")
 
-        faction.aircrafts = [AircraftType.named(n) for n in json.get("aircrafts", [])]
+        faction.aircraft = [AircraftType.named(n) for n in json.get("aircrafts", [])]
         faction.awacs = [AircraftType.named(n) for n in json.get("awacs", [])]
         faction.tankers = [AircraftType.named(n) for n in json.get("tankers", [])]
-
-        faction.aircrafts = list(
-            set(faction.aircrafts + faction.awacs + faction.tankers)
-        )
 
         faction.frontline_units = [
             GroundUnitType.named(n) for n in json.get("frontline_units", [])
@@ -335,8 +335,9 @@ class Faction:
         if not mod_settings.uh_60l:
             self.remove_aircraft("UH-60L")
             self.remove_aircraft("KC130J")
-        if not mod_settings.f4b_phantom:
+        if not mod_settings.f4bc_phantom:
             self.remove_aircraft("VSN_F4B")
+            self.remove_aircraft("VSN_F4C")
         if not mod_settings.f15d_baz:
             self.remove_aircraft("F-15D")
         if not mod_settings.f_16_idf:
@@ -345,10 +346,10 @@ class Faction:
             self.remove_aircraft("F_16D_50")
             self.remove_aircraft("F_16D_50_NS")
             self.remove_aircraft("F_16D_52_NS")
+            self.remove_aircraft("F-16D_Barak_30")
+            self.remove_aircraft("F-16D_Barak_40")
         else:
             inject_F16I()
-            # Remove the stock Viper because that DCS ID is now used by the Sufa
-            self.remove_aircraft_by_name("F-16CM Fighting Falcon (Block 50)")
         if not mod_settings.f22_raptor:
             self.remove_aircraft("F-22A")
         if not mod_settings.f84g_thunderjet:
@@ -356,6 +357,7 @@ class Faction:
         if not mod_settings.f100_supersabre:
             self.remove_aircraft("VSN_F100")
         if not mod_settings.f104_starfighter:
+            self.remove_aircraft("VSN_F104C")
             self.remove_aircraft("VSN_F104G")
             self.remove_aircraft("VSN_F104S")
             self.remove_aircraft("VSN_F104S_AG")
@@ -422,13 +424,56 @@ class Faction:
             self.remove_preset("SA-20B/S-300PMU-2")
             self.remove_preset("SA-23/S-300VM")
             self.remove_preset("SA-17")
-            self.remove_preset("KS-19")
+            self.remove_preset("KS-19_HDS")
             self.remove_preset("HQ-2")
             self.remove_preset("SA-2/S-75 V-759/5V23")
             self.remove_preset("SA-3/S-125 V-601P/5V27")
             self.remove_vehicle("SAM SA-14 Strela-3 manpad")
             self.remove_vehicle("SAM SA-24 Igla-S manpad")
             self.remove_vehicle("Polyana-D4M1 C2 node")
+        if not mod_settings.fa_18efg:
+            self.remove_aircraft("FA-18E")
+            self.remove_aircraft("FA-18F")
+            self.remove_aircraft("EA-18G")
+        # swedish military assets pack
+        if not mod_settings.swedishmilitaryassetspack:
+            self.remove_vehicle("BV410_RBS70")
+            self.remove_vehicle("BV410_RBS90")
+            self.remove_vehicle("LvS_103_Lavett103_Rb103A")
+            self.remove_vehicle("LvS_103_Lavett103_Rb103B")
+            self.remove_vehicle("LvS_103_Lavett103_HX_Rb103A")
+            self.remove_vehicle("LvS_103_Lavett103_HX_Rb103B")
+            self.remove_vehicle("LvS_103_StriE103")
+            self.remove_vehicle("LvS_103_PM103")
+            self.remove_vehicle("LvS_103_PM103_HX")
+            self.remove_vehicle("LvS_103_Elverk103")
+            self.remove_vehicle("LvKv9040")
+            self.remove_vehicle("RBS_70")
+            self.remove_vehicle("RBS_90")
+            self.remove_vehicle("RBS_98")
+            self.remove_vehicle("UndE23")
+            self.remove_vehicle("BV410")
+            self.remove_vehicle("CV9040")
+            self.remove_vehicle("Strv103")
+            self.remove_vehicle("Strv121")
+            self.remove_vehicle("Strv122")
+            self.remove_vehicle("Strv2000")
+            self.remove_vehicle("Volvo740")
+            self.remove_vehicle("RBS_15KA")
+            self.remove_vehicle("AG_90")
+            self.remove_vehicle("SwedishinfantryAK4")
+            self.remove_vehicle("SwedishinfantryAK5")
+            self.remove_vehicle("SwedishinfantryAK5GT")
+            self.remove_vehicle("SwedishinfantryKSP90")
+            self.remove_vehicle("SwedishinfantryKSP58")
+            self.remove_vehicle("SwedishinfantryPskott86")
+            self.remove_vehicle("RBS_57")
+            self.remove_vehicle("RBS_58")
+            self.remove_vehicle("Artillerisystem08")
+            self.remove_vehicle("Grkpbv90")
+            self.remove_ship("HSwMS_Visby")
+            self.remove_ship("Strb90")
+            self.remove_aircraft("HKP15B")
 
     def remove_aircraft(self, name: str) -> None:
         for i in self.aircrafts:
@@ -449,6 +494,11 @@ class Faction:
         for i in self.frontline_units:
             if i.dcs_unit_type.id == name:
                 self.frontline_units.remove(i)
+
+    def remove_ship(self, name: str) -> None:
+        for i in self.naval_units:
+            if i.dcs_unit_type.id == name:
+                self.naval_units.remove(i)
 
 
 def load_ship(name: str) -> Optional[Type[ShipType]]:

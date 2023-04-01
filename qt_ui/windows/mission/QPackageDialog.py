@@ -13,18 +13,22 @@ from PySide2.QtWidgets import (
     QPushButton,
     QTimeEdit,
     QVBoxLayout,
+    QLineEdit,
 )
 
 from game.ato.flight import Flight
 from game.ato.flightplans.planningerror import PlanningError
 from game.ato.package import Package
 from game.game import Game
+from game.radio.radios import RadioFrequency
 from game.server import EventStream
 from game.sim import GameUpdateEvents
 from game.theater.missiontarget import MissionTarget
 from qt_ui.models import AtoModel, GameModel, PackageModel
 from qt_ui.uiconstants import EVENT_ICONS
+from qt_ui.widgets.QFrequencyWidget import QFrequencyWidget
 from qt_ui.widgets.ato import QFlightList
+from qt_ui.windows.QRadioFrequencyDialog import QRadioFrequencyDialog
 from qt_ui.windows.mission.flight.QFlightCreator import QFlightCreator
 
 
@@ -55,17 +59,28 @@ class QPackageDialog(QDialog):
         self.summary_row = QHBoxLayout()
         self.layout.addLayout(self.summary_row)
 
-        self.package_type_column = QHBoxLayout()
+        self.package_type_column = QVBoxLayout()
         self.summary_row.addLayout(self.package_type_column)
 
+        package_type_row = QHBoxLayout()
         self.package_type_label = QLabel("Package Type:")
         self.package_type_text = QLabel(self.package_model.description)
         # noinspection PyUnresolvedReferences
-        self.package_changed.connect(
-            lambda: self.package_type_text.setText(self.package_model.description)
-        )
-        self.package_type_column.addWidget(self.package_type_label)
-        self.package_type_column.addWidget(self.package_type_text)
+        self.package_changed.connect(self.on_package_changed)
+        package_type_row.addWidget(self.package_type_label)
+        package_type_row.addWidget(self.package_type_text)
+        self.package_type_column.addLayout(package_type_row)
+
+        self.summary_row.addStretch(1)
+
+        self.package_name_column = QHBoxLayout()
+        self.summary_row.addLayout(self.package_name_column)
+        self.package_name_label = QLabel("Package Name:")
+        self.package_name_label.setAlignment(Qt.AlignCenter)
+        self.package_name_text = QLineEdit(self.package_model.package.custom_name)
+        self.package_name_text.textChanged.connect(self.on_change_name)
+        self.package_name_column.addWidget(self.package_name_label)
+        self.package_name_column.addWidget(self.package_name_text)
 
         self.summary_row.addStretch(1)
 
@@ -118,11 +133,16 @@ class QPackageDialog(QDialog):
         self.delete_flight_button.setEnabled(model.rowCount() > 0)
         self.button_layout.addWidget(self.delete_flight_button)
 
-        self.package_model.tot_changed.connect(self.update_tot)
+        self.button_layout.addStretch()
+
+        self.freq_widget = QFrequencyWidget(self.package_model.package, game_model)
+        self.button_layout.addWidget(self.freq_widget)
 
         self.button_layout.addStretch()
 
         self.setLayout(self.layout)
+
+        self.package_model.tot_changed.connect(self.update_tot)
 
         self.accepted.connect(self.on_save)
         self.finished.connect(self.on_close)
@@ -202,6 +222,29 @@ class QPackageDialog(QDialog):
         self.package_model.cancel_or_abort_flight(flight)
         # noinspection PyUnresolvedReferences
         self.package_changed.emit()
+
+    def on_change_name(self) -> None:
+        self.package_model.package.custom_name = self.package_name_text.text()
+
+    def on_open_radio(self) -> None:
+        self.package_frequency_dialog = QRadioFrequencyDialog(
+            parent=self.window(), container=self.package_model.package
+        )
+        self.package_frequency_dialog.accepted.connect(self.assign_frequency)
+        self.package_frequency_dialog.show()
+
+    def assign_frequency(self):
+        hz = round(self.package_frequency_dialog.frequency_input.value() * 10**6)
+        self.package_model.package.frequency = RadioFrequency(hertz=hz)
+        self.package_changed.emit()
+
+    def on_package_changed(self):
+        self.package_type_text.setText(self.package_model.description)
+        self.freq_widget.check_freq()
+
+    def on_reset_radio(self):
+        self.package_model.package.frequency = None
+        self.package_freq_text.setText("AUTO")
 
 
 class QNewPackageDialog(QPackageDialog):

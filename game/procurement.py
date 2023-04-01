@@ -16,8 +16,6 @@ if TYPE_CHECKING:
     from game.factions.faction import Faction
     from game.squadrons import Squadron
 
-FRONTLINE_RESERVES_FACTOR = 1.3
-
 
 @dataclass(frozen=True)
 class AircraftProcurementRequest:
@@ -41,7 +39,6 @@ class ProcurementAi:
         manage_front_line: bool,
         manage_aircraft: bool,
     ) -> None:
-
         self.game = game
         self.is_player = for_player
         self.air_wing = game.air_wing_for(for_player)
@@ -62,8 +59,8 @@ class ProcurementAi:
         ):
             return 0
 
-        # faction has no planes
-        if len(self.faction.aircrafts) == 0:
+        # faction has no planes or no squadrons
+        if len(self.faction.aircrafts) == 0 or len(self.air_wing.squadrons) == 0:
             return 1
 
         for cp in self.owned_points:
@@ -74,13 +71,15 @@ class ProcurementAi:
             cp_aircraft = cp.allocated_aircraft()
             aircraft_investment += cp_aircraft.total_value
 
-        total_investment = aircraft_investment + armor_investment
-        if total_investment == 0:
+        air = self.game.settings.auto_procurement_balance / 100.0
+        ground = 1 - air
+        weighted_investment = aircraft_investment * air + armor_investment * ground
+        if weighted_investment == 0:
             # Turn 0 or all units were destroyed. Either way, split 30/70.
-            return 0.3
+            return min(0.3, ground)
 
         # the more planes we have, the more ground units we want and vice versa
-        ground_unit_share = aircraft_investment / total_investment
+        ground_unit_share = aircraft_investment * air / weighted_investment
         if ground_unit_share > 1.0:
             raise ValueError
 
@@ -257,7 +256,8 @@ class ProcurementAi:
                 # No source of ground units, so can't buy anything.
                 continue
 
-            purchase_target = cp.frontline_unit_count_limit * FRONTLINE_RESERVES_FACTOR
+            fr_factor = self.game.settings.frontline_reserves_factor / 100.0
+            purchase_target = cp.frontline_unit_count_limit * fr_factor
             allocated = cp.allocated_ground_units(
                 self.game.coalition_for(self.is_player).transfers
             )

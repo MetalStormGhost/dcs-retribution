@@ -14,6 +14,7 @@ from .minutesoption import minutes_option
 from .optiondescription import OptionDescription, SETTING_DESCRIPTION_KEY
 from .skilloption import skill_option
 from ..ato.starttype import StartType
+from ..weather import NightMissions
 
 
 @unique
@@ -35,6 +36,7 @@ CAMPAIGN_MANAGEMENT_PAGE = "Campaign Management"
 GENERAL_SECTION = "General"
 PILOTS_AND_SQUADRONS_SECTION = "Pilots and Squadrons"
 HQ_AUTOMATION_SECTION = "HQ Automation"
+FLIGHT_PLANNER_AUTOMATION = "Flight Planner Automation"
 
 MISSION_GENERATOR_PAGE = "Mission Generator"
 
@@ -105,11 +107,16 @@ class Settings:
         section=MISSION_DIFFICULTY_SECTION,
         default=True,
     )
-    night_disabled: bool = boolean_option(
-        "No night missions",
+    night_day_missions: NightMissions = choices_option(
+        "Night/day mission options",
         page=DIFFICULTY_PAGE,
         section=MISSION_DIFFICULTY_SECTION,
-        default=False,
+        choices={
+            "Generate night and day missions": NightMissions.DayAndNight,
+            "Only generate day missions": NightMissions.OnlyDay,
+            "Only generate night missions": NightMissions.OnlyNight,
+        },
+        default=NightMissions.DayAndNight,
     )
     # Mission Restrictions
     labels: str = choices_option(
@@ -165,30 +172,6 @@ class Settings:
         detail=(
             "Restricts weapon availability based on the campaign date. Data is "
             "extremely incomplete so does not affect all weapons."
-        ),
-    )
-    disable_legacy_aewc: bool = boolean_option(
-        "Spawn invulnerable, always-available AEW&C aircraft (deprecated)",
-        page=CAMPAIGN_MANAGEMENT_PAGE,
-        section=GENERAL_SECTION,
-        default=True,
-        invert=True,
-        detail=(
-            "If checked, an invulnerable friendly AEW&C aircraft that begins the "
-            "mission on station will be be spawned. This behavior will be removed in a "
-            "future release."
-        ),
-    )
-    disable_legacy_tanker: bool = boolean_option(
-        "Spawn invulnerable, always-available tanker aircraft (deprecated)",
-        page=CAMPAIGN_MANAGEMENT_PAGE,
-        section=GENERAL_SECTION,
-        default=True,
-        invert=True,
-        detail=(
-            "If checked, an invulnerable friendly tanker aircraft that begins the "
-            "mission on station will be be spawned. This behavior will be removed in a "
-            "future release."
         ),
     )
     # Pilots and Squadrons
@@ -291,7 +274,77 @@ class Settings:
         HQ_AUTOMATION_SECTION,
         default=True,
     )
-    reserves_procurement_target: int = 10
+    auto_procurement_balance: int = bounded_int_option(
+        "AI ground unit procurement budget ratio (%)",
+        CAMPAIGN_MANAGEMENT_PAGE,
+        HQ_AUTOMATION_SECTION,
+        min=0,
+        max=100,
+        default=50,
+        detail=(
+            "Ratio (larger number -> more budget for ground units) "
+            "that indicates how the AI procurement planner should "
+            "spend its budget."
+        ),
+    )
+    frontline_reserves_factor: int = bounded_int_option(
+        "AI ground unit front-line reserves factor (%)",
+        CAMPAIGN_MANAGEMENT_PAGE,
+        HQ_AUTOMATION_SECTION,
+        min=0,
+        max=1000,
+        default=130,
+        detail=(
+            "Factor to be multiplied with the control point's unit count limit "
+            "to calculate the procurement target for reserve troops at front-lines."
+        ),
+    )
+    reserves_procurement_target: int = bounded_int_option(
+        "AI ground unit reserves procurement target",
+        CAMPAIGN_MANAGEMENT_PAGE,
+        HQ_AUTOMATION_SECTION,
+        min=0,
+        max=1000,
+        default=10,
+        detail=(
+            "The number of units that will be bought as reserves for applicable control points"
+        ),
+    )
+
+    # Flight Planner Automation
+    #: The weight used for 2-ships.
+    fpa_2ship_weight: int = bounded_int_option(
+        "2-ship weight factor (WF2)",
+        CAMPAIGN_MANAGEMENT_PAGE,
+        FLIGHT_PLANNER_AUTOMATION,
+        default=50,
+        min=0,
+        max=100,
+        detail=(
+            "Used as a distribution to randomize 2/3/4-ships for BARCAP, CAS, OCA & ANTI-SHIP flights. "
+            "The weight W_i is calculated according to the following formula: &#10;&#13;"
+            "W_i = WF_i / (WF2 + WF3 + WF4)"
+        ),
+    )
+    #: The weight used for 3-ships.
+    fpa_3ship_weight: int = bounded_int_option(
+        "3-ship weight factor (WF3)",
+        CAMPAIGN_MANAGEMENT_PAGE,
+        FLIGHT_PLANNER_AUTOMATION,
+        default=35,
+        min=0,
+        max=100,
+        detail="See 2-ship weight factor (WF2)",
+    )
+    fpa_4ship_weight: int = bounded_int_option(
+        "4-ship weight factor (WF4)",
+        CAMPAIGN_MANAGEMENT_PAGE,
+        FLIGHT_PLANNER_AUTOMATION,
+        default=15,
+        min=0,
+        max=100,
+        detail="See 2-ship weight factor (WF2)",
+    )
 
     # Mission Generator
     # Gameplay
@@ -361,7 +414,7 @@ class Settings:
         "Player flights ignore TOT and spawn immediately",
         MISSION_GENERATOR_PAGE,
         GAMEPLAY_SECTION,
-        default=False,
+        default=True,
         detail=(
             "Does not adjust package waypoint times. Should not be used if players "
             "have runway or in-air starts."
@@ -371,6 +424,16 @@ class Settings:
             "more than 10 minutes after the start of the mission. <strong>This does "
             "not alter the timing of your mission. Your TOT will not change. This "
             "option only allows the player to wait on the ground.</strong>"
+        ),
+    )
+    atflir_autoswap: bool = boolean_option(
+        "Auto-swap ATFLIR to LITENING",
+        MISSION_GENERATOR_PAGE,
+        GAMEPLAY_SECTION,
+        default=True,
+        detail=(
+            "Automatically swaps ATFLIR to LITENING pod for newly generated land-based F-18 flights "
+            "without having to change the payload. <u>Takes effect after current turn!</u>"
         ),
     )
     default_start_type: StartType = choices_option(
@@ -394,6 +457,14 @@ class Settings:
         min=30,
         max=150,
     )
+    desired_tanker_on_station_time: timedelta = minutes_option(
+        "Desired tanker on-station time",
+        page=MISSION_GENERATOR_PAGE,
+        section=GAMEPLAY_SECTION,
+        default=timedelta(minutes=60),
+        min=30,
+        max=150,
+    )
     # Mission specific
     max_frontline_length: int = bounded_int_option(
         "Maximum frontline length (km)",
@@ -402,6 +473,67 @@ class Settings:
         default=80,
         min=1,
         max=100,
+    )
+    opfor_autoplanner_aggressiveness: int = bounded_int_option(
+        "OPFOR autoplanner aggressiveness (%)",
+        page=MISSION_GENERATOR_PAGE,
+        section=GAMEPLAY_SECTION,
+        default=20,
+        min=0,
+        max=100,
+        detail=(
+            "Chance (larger number -> higher chance) that the OPFOR AI "
+            "autoplanner will take risks and plan flights against targets "
+            "within threatened airspace."
+        ),
+    )
+    game_masters_count: int = bounded_int_option(
+        "Number of game masters",
+        page=MISSION_GENERATOR_PAGE,
+        section=GAMEPLAY_SECTION,
+        default=1,
+        min=0,
+        max=10,
+        detail=(
+            "The number of game master slots to generate for each side. "
+            "Game masters can see, control & direct all units in the mission."
+        ),
+    )
+    tactical_commander_count: int = bounded_int_option(
+        "Number of tactical commands",
+        page=MISSION_GENERATOR_PAGE,
+        section=GAMEPLAY_SECTION,
+        default=3,
+        min=0,
+        max=10,
+        detail=(
+            "The number of tactical commander slots to generate for each side. "
+            "Tactical commanders can control & direct friendly units."
+        ),
+    )
+    jtac_count: int = bounded_int_option(
+        "Number of JTAC controllers",
+        page=MISSION_GENERATOR_PAGE,
+        section=GAMEPLAY_SECTION,
+        default=3,
+        min=0,
+        max=10,
+        detail=(
+            "The number of JTAC controller slots to generate for each side. "
+            "JTAC operators can only control friendly units."
+        ),
+    )
+    observer_count: int = bounded_int_option(
+        "Number of observers",
+        page=MISSION_GENERATOR_PAGE,
+        section=GAMEPLAY_SECTION,
+        default=0,
+        min=0,
+        max=10,
+        detail=(
+            "The number of observers slots to generate for each side. "
+            'Use this to allow spectators when disabling "Allow external views".'
+        ),
     )
 
     # Performance
@@ -476,6 +608,12 @@ class Settings:
         section=PERFORMANCE_SECTION,
         default=True,
     )
+    perf_disable_idle_aircraft: bool = boolean_option(
+        "Disable idle aircraft at airfields",
+        page=MISSION_GENERATOR_PAGE,
+        section=PERFORMANCE_SECTION,
+        default=False,
+    )
     # Performance culling
     perf_culling: bool = boolean_option(
         "Culling of distant units enabled",
@@ -511,6 +649,7 @@ class Settings:
     show_red_ato: bool = False
     enable_frontline_cheats: bool = False
     enable_base_capture_cheat: bool = False
+    enable_transfer_cheat: bool = False
 
     # LUA Plugins system
     plugins: Dict[str, bool] = field(default_factory=dict)
@@ -521,17 +660,17 @@ class Settings:
     def plugin_settings_key(identifier: str) -> str:
         return f"plugins.{identifier}"
 
-    def initialize_plugin_option(self, identifier: str, default_value: bool) -> None:
+    def initialize_plugin_option(self, identifier: str, default_value: Any) -> None:
         try:
             self.plugin_option(identifier)
         except KeyError:
             self.set_plugin_option(identifier, default_value)
 
-    def plugin_option(self, identifier: str) -> bool:
+    def plugin_option(self, identifier: str) -> Any:
         return self.plugins[self.plugin_settings_key(identifier)]
 
-    def set_plugin_option(self, identifier: str, enabled: bool) -> None:
-        self.plugins[self.plugin_settings_key(identifier)] = enabled
+    def set_plugin_option(self, identifier: str, value: Any) -> None:
+        self.plugins[self.plugin_settings_key(identifier)] = value
 
     def __setstate__(self, state: dict[str, Any]) -> None:
         # __setstate__ is called with the dict of the object being unpickled. We

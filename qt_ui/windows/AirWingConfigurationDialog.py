@@ -161,6 +161,14 @@ class SquadronLiverySelector(QComboBox):
             valid_livery = livery.countries is None or cc in livery.countries
             if valid_livery or cc in ["BLUE", "RED"]:
                 liveries.add(livery)
+        faction = squadron.coalition.faction
+        overrides = [
+            x
+            for x in faction.liveries_overrides.get(self.aircraft_type, [])
+            if x in [y.id.lower() for y in liveries]
+        ]
+        if len(overrides) > 0:
+            self.addItem("Use livery overrides", userData=None)
         for livery in sorted(liveries):
             self.addItem(livery.name, userData=livery.id)
             if selected_livery is not None:
@@ -445,7 +453,8 @@ class AircraftTypeList(QListView):
 
     @staticmethod
     def icon_for(aircraft: AircraftType) -> Optional[QIcon]:
-        name = aircraft.dcs_id
+        # Replace slashes with underscores because slashes are not allowed in filenames
+        name = aircraft.dcs_id.replace("/", "_")
         if name in AIRCRAFT_ICONS:
             return QIcon(AIRCRAFT_ICONS[name])
         return None

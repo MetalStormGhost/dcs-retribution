@@ -17,13 +17,11 @@ from game.missiongenerator.aircraft.aircraftgenerator import (
     AircraftGenerator,
 )
 from game.naming import namegen
-from game.radio.radios import RadioFrequency, RadioRegistry
+from game.radio.radios import RadioFrequency, RadioRegistry, MHz
 from game.radio.tacan import TacanRegistry
 from game.theater import Airfield
 from game.theater.bullseye import Bullseye
 from game.unitmap import UnitMap
-from .airconflictdescription import AirConflictDescription
-from .airsupportgenerator import AirSupportGenerator
 from .briefinggenerator import BriefingGenerator, MissionInfoGenerator
 from .cargoshipgenerator import CargoShipGenerator
 from .convoygenerator import ConvoyGenerator
@@ -39,12 +37,10 @@ from .missiondata import MissionData
 from .tgogenerator import TgoGenerator
 from .triggergenerator import TriggerGenerator
 from .visualsgenerator import VisualsGenerator
+from ..radio.TacanContainer import TacanContainer
 
 if TYPE_CHECKING:
     from game import Game
-
-
-COMBINED_ARMS_SLOTS = 1
 
 
 def country_id_from_name(name: str) -> int:
@@ -70,7 +66,11 @@ class MissionGenerator:
         self.generation_started = False
 
         with open("resources/default_options.lua", "r", encoding="utf-8") as f:
-            self.mission.options.load_from_dict(dcs.lua.loads(f.read())["options"])
+            options = dcs.lua.loads(f.read())["options"]
+            ext_view = game.settings.external_views_allowed
+            options["miscellaneous"]["f11_free_camera"] = ext_view
+            options["difficulty"]["spectatorExternalViews"] = ext_view
+            self.mission.options.load_from_dict(options)
 
     def generate_miz(self, output: Path) -> UnitMap:
         if self.generation_started:
@@ -159,6 +159,9 @@ class MissionGenerator:
         unique_map_frequencies: set[RadioFrequency] = set()
         self.initialize_tacan_registry(unique_map_frequencies)
         self.initialize_radio_registry(unique_map_frequencies)
+        # Allocate UHF/VHF Guard Freq first!
+        unique_map_frequencies.add(MHz(243))
+        unique_map_frequencies.add(MHz(121, 500))
         for frequency in unique_map_frequencies:
             self.radio_registry.reserve(frequency)
 
@@ -176,6 +179,9 @@ class MissionGenerator:
                     logging.warning(f"TACAN beacon has no channel: {beacon.callsign}")
                 else:
                     self.tacan_registry.mark_unavailable(beacon.tacan_channel)
+        for cp in self.game.theater.controlpoints:
+            if isinstance(cp, TacanContainer) and cp.tacan is not None:
+                self.tacan_registry.mark_unavailable(cp.tacan)
 
     def initialize_radio_registry(
         self, unique_map_frequencies: set[RadioFrequency]
@@ -220,17 +226,6 @@ class MissionGenerator:
     def generate_air_units(self, tgo_generator: TgoGenerator) -> None:
         """Generate the air units for the Operation"""
 
-        # Air Support (Tanker & Awacs)
-        air_support_generator = AirSupportGenerator(
-            self.mission,
-            AirConflictDescription.for_theater(self.game.theater),
-            self.game,
-            self.radio_registry,
-            self.tacan_registry,
-            self.mission_data,
-        )
-        air_support_generator.generate()
-
         # Generate Aircraft Activity on the map
         aircraft_generator = AircraftGenerator(
             self.mission,
@@ -241,7 +236,7 @@ class MissionGenerator:
             self.tacan_registry,
             self.laser_code_registry,
             self.unit_map,
-            mission_data=air_support_generator.mission_data,
+            mission_data=self.mission_data,
             helipads=tgo_generator.helipads,
         )
 
@@ -257,19 +252,18 @@ class MissionGenerator:
             self.game.red.ato,
             tgo_generator.runways,
         )
-        aircraft_generator.spawn_unused_aircraft(
-            self.mission.country(self.game.blue.country_name),
-            self.mission.country(self.game.red.country_name),
-        )
+        if not self.game.settings.perf_disable_idle_aircraft:
+            aircraft_generator.spawn_unused_aircraft(
+                self.mission.country(self.game.blue.country_name),
+                self.mission.country(self.game.red.country_name),
+            )
+
+        self.mission_data.flights = aircraft_generator.flights
 
         for flight in aircraft_generator.flights:
             if not flight.client_units:
                 continue
-            flight.aircraft_type.assign_channels_for_flight(
-                flight, air_support_generator.mission_data
-            )
-
-        self.mission_data.flights = aircraft_generator.flights
+            flight.aircraft_type.assign_channels_for_flight(flight, self.mission_data)
 
     def generate_destroyed_units(self) -> None:
         """Add destroyed units to the Mission"""
@@ -330,6 +324,11 @@ class MissionGenerator:
             gen.generate()
 
     def setup_combined_arms(self) -> None:
-        self.mission.groundControl.pilot_can_control_vehicles = COMBINED_ARMS_SLOTS > 0
-        self.mission.groundControl.blue_tactical_commander = COMBINED_ARMS_SLOTS
-        self.mission.groundControl.blue_observer = 1
+        settings = self.game.settings
+        commanders = settings.tactical_commander_count
+        self.mission.groundControl.pilot_can_control_vehicles = commanders > 0
+
+        self.mission.groundControl.blue_game_masters = settings.game_masters_count
+        self.mission.groundControl.blue_tactical_commander = commanders
+        self.mission.groundControl.blue_jtac = settings.jtac_count
+        self.mission.groundControl.blue_observer = settings.observer_count

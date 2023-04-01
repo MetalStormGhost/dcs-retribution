@@ -5,7 +5,7 @@ import logging
 import textwrap
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING, Any
 
 from game.settings import Settings
 
@@ -32,9 +32,9 @@ class LuaPluginWorkOrder:
 
 
 class PluginSettings:
-    def __init__(self, identifier: str, enabled_by_default: bool) -> None:
+    def __init__(self, identifier: str, value: Any) -> None:
         self.identifier = identifier
-        self.enabled_by_default = enabled_by_default
+        self.value = value
         self.settings = Settings()
         self.initialize_settings()
 
@@ -46,20 +46,26 @@ class PluginSettings:
         # Plugin options are saved in the game's Settings, but it's possible for
         # plugins to change across loads. If new plugins are added or new
         # options added to those plugins, initialize the new settings.
-        self.settings.initialize_plugin_option(self.identifier, self.enabled_by_default)
+        self.settings.initialize_plugin_option(self.identifier, self.value)
 
     @property
-    def enabled(self) -> bool:
+    def get_value(self) -> Any:
         return self.settings.plugin_option(self.identifier)
 
-    def set_enabled(self, enabled: bool) -> None:
-        self.settings.set_plugin_option(self.identifier, enabled)
+    def set_value(self, value: Any) -> None:
+        self.settings.set_plugin_option(self.identifier, value)
 
 
 class LuaPluginOption(PluginSettings):
-    def __init__(self, identifier: str, name: str, enabled_by_default: bool) -> None:
-        super().__init__(identifier, enabled_by_default)
+    def __init__(
+        self, identifier: str, name: str, min: Any, max: Any, value: Any
+    ) -> None:
+        super().__init__(identifier, value)
         self.name = name
+        if type(value) == int or type(value) == float:
+            self.min, self.max = min, max
+        else:
+            self.min, self.max = None, None
 
 
 @dataclass(frozen=True)
@@ -83,7 +89,9 @@ class LuaPluginDefinition:
                 LuaPluginOption(
                     identifier=f"{name}.{option_id}",
                     name=option.get("nameInUI", name),
-                    enabled_by_default=option.get("defaultValue"),
+                    min=option.get("minimumValue", 0),
+                    max=option.get("maximumValue", 10000),
+                    value=option.get("defaultValue"),
                 )
             )
 
@@ -136,6 +144,10 @@ class LuaPlugin(PluginSettings):
     def options(self) -> List[LuaPluginOption]:
         return self.definition.options
 
+    @property
+    def enabled(self) -> bool:
+        return type(self.value) == bool and self.value
+
     @classmethod
     def from_json(cls, name: str, path: Path) -> Optional[LuaPlugin]:
         try:
@@ -160,9 +172,9 @@ class LuaPlugin(PluginSettings):
         if self.options:
             option_decls = []
             for option in self.options:
-                enabled = str(option.enabled).lower()
+                value = str(option.value).lower()
                 name = option.identifier
-                option_decls.append(f"    dcsLiberation.plugins.{name} = {enabled}")
+                option_decls.append(f"    dcsRetribution.plugins.{name} = {value}")
 
             joined_options = "\n".join(option_decls)
 
@@ -170,11 +182,11 @@ class LuaPlugin(PluginSettings):
                 f"""\
                 -- {self.identifier} plugin configuration.
 
-                if dcsLiberation then
-                    if not dcsLiberation.plugins then
-                        dcsLiberation.plugins = {{}}
+                if dcsRetribution then
+                    if not dcsRetribution.plugins then
+                        dcsRetribution.plugins = {{}}
                     end
-                    dcsLiberation.plugins.{self.identifier} = {{}}
+                    dcsRetribution.plugins.{self.identifier} = {{}}
                     {joined_options}
                 end
 

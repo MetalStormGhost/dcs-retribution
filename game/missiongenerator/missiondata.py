@@ -11,6 +11,8 @@ from game.runways import RunwayData
 if TYPE_CHECKING:
     from game.radio.radios import RadioFrequency
     from game.radio.tacan import TacanChannel
+    from game.utils import Distance
+    from uuid import UUID
 
 
 @dataclass
@@ -31,8 +33,8 @@ class AwacsInfo(GroupInfo):
     """AWACS information for the kneeboard."""
 
     depature_location: Optional[str]
-    start_time: Optional[timedelta]
-    end_time: Optional[timedelta]
+    start_time: timedelta
+    end_time: timedelta
 
 
 @dataclass
@@ -41,8 +43,8 @@ class TankerInfo(GroupInfo):
 
     variant: str
     tacan: TacanChannel
-    start_time: Optional[timedelta]
-    end_time: Optional[timedelta]
+    start_time: timedelta
+    end_time: timedelta
 
 
 @dataclass
@@ -94,3 +96,4 @@ class MissionData:
     tankers: list[TankerInfo] = field(default_factory=list)
     jtacs: list[JtacInfo] = field(default_factory=list)
     logistics: list[LogisticsInfo] = field(default_factory=list)
+    cp_stack: dict[UUID, Distance] = field(default_factory=dict)

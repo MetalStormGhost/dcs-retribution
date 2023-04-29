@@ -368,6 +368,7 @@ class Faction:
             self.remove_aircraft("VSN_A6A")
         if not mod_settings.jas39_gripen:
             self.remove_aircraft("JAS39Gripen")
+            self.remove_aircraft("JAS39Gripen_BVR")
             self.remove_aircraft("JAS39Gripen_AG")
         if not mod_settings.su30_flanker_h:
             self.remove_aircraft("Su-30MKA")
@@ -378,6 +379,8 @@ class Faction:
             self.remove_aircraft("Su-57")
         if not mod_settings.ov10a_bronco:
             self.remove_aircraft("Bronco-OV-10A")
+        if not mod_settings.a7e_corsair2:
+            self.remove_aircraft("A-7E")
         # frenchpack
         if not mod_settings.frenchpack:
             self.remove_vehicle("AMX10RCR")

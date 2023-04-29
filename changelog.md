@@ -1,4 +1,33 @@
-# Retribution 1.1.0
+# Retribution v1.2.0
+
+## Features/Improvements
+* **[Preset Groups]** Add SA-2 with ZSU-23/57
+* **[Campaign Design]** Ability to define almost all possible settings in the campaign's yaml file.
+* **[Options]** Ability to load & save your settings.
+* **[UI]** Added fuel selector in flight's edit window.
+* **[Plugins]** Expose Splash Damage's "game_messages" option and set its default to false.
+* **[Mission Generation]** Improved AI SEAD capabilities, allowing for mixed loadouts using Decoys, ARMs & ASMs.
+* **[Modding]** Support for A-7E Corsair II (presumed latest available version)
+* **[Squadrons]** Added many new squadron's by Adecarcer
+* **[Plugins]** Updated 'expl_table' in Splash Damage script.
+
+## Fixes
+* **[New Game Wizard]** Settings would not persist when going back to a previous page.
+
+
+# Retribution v1.1.1  (hotfix)
+
+## Features/Improvements
+* **[Modding]** Support for IDF Mod Project F-16I Sufa & F-16D v3.6 mod
+* **[Modding]** Support for JAS-39 Gripen v1.8.5-beta mod
+
+## Fixes
+* **[Plugins]** Fix bug where changes to plugin options doesn't do anything.
+* **[Campaign Management]** Fix bug in procurement when no squadrons are present.
+* **[Layouts]** Fix edge-case bug layout's group size.
+* **[Campaign Design]** Preset groups assigned to specific TGOs not working as intended.
+
+# Retribution v1.1.0
 
 ## Features/Improvements
 * **[Mission Generation]** Given a CAS flight was planned, delay ground force attack until first CAS flight is on station
@@ -46,10 +75,10 @@
 * **[Mission Generation]** Aircraft not using decoys during SEAD.
 * **[Campaign]** New campaign (1968 Yankee Station) by Adecarcer
 
-# Retribution 1.0.1 (hotfix)
+# Retribution v1.0.1 (hotfix)
 * **[Mission Generation]** Fix serialization issue when STRIKE flight has no escorts
 
-# Retribution 1.0.0
+# Retribution v1.0.0
 
 ## Features/Improvements
 * **[Engine]** Support for DCS v2.8.1.34437.

@@ -20,6 +20,10 @@ class DeadIngressBuilder(PydcsWaypointBuilder):
             )
             return
 
+        # Preemptively use ECM to better avoid getting swatted.
+        ecm_option = OptECMUsing(value=OptECMUsing.Values.UseIfDetectedLockByRadar)
+        waypoint.tasks.append(ecm_option)
+
         for group in target.groups:
             miz_group = self.mission.find_group(group.group_name)
             if miz_group is None:
@@ -31,7 +35,7 @@ class DeadIngressBuilder(PydcsWaypointBuilder):
             task = AttackGroup(
                 miz_group.id,
                 weapon_type=WeaponType.Guided,
-                altitude=round(self.flight.coalition.doctrine.ingress_altitude.meters),
+                altitude=waypoint.alt,
             )
             waypoint.tasks.append(task)
 
@@ -42,11 +46,7 @@ class DeadIngressBuilder(PydcsWaypointBuilder):
                 weapon_type=WeaponType.Unguided,
                 expend=Expend.All,
                 direction=math.radians(dir),
-                altitude=round(self.flight.coalition.doctrine.ingress_altitude.meters),
+                altitude=waypoint.alt,
             )
             task.params["altitudeEnabled"] = False
             waypoint.tasks.append(task)
-
-        # Preemptively use ECM to better avoid getting swatted.
-        ecm_option = OptECMUsing(value=OptECMUsing.Values.UseIfDetectedLockByRadar)
-        waypoint.tasks.append(ecm_option)

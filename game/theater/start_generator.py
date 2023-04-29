@@ -55,6 +55,7 @@ class GeneratorSettings:
 class ModSettings:
     a4_skyhawk: bool = False
     a6a_intruder: bool = False
+    a7e_corsair2: bool = False
     f4bc_phantom: bool = False
     f15d_baz: bool = False
     f_16_idf: bool = False
@@ -310,8 +311,15 @@ class AirbaseGroundObjectGenerator(ControlPointGroundObjectGenerator):
             and all([u in self.faction.accessible_units for u in fg.units])
         )
         if valid_fg:
-            unit_group = fg
             assert fg
+            for layout in fg.layouts:
+                for lg in layout.groups:
+                    for ug in lg.unit_groups:
+                        if not fg.has_unit_for_layout_group(ug) and ug.fill:
+                            for g in self.faction.ground_units:
+                                if g.unit_class in ug.unit_classes:
+                                    fg.units.append(g)
+            unit_group: Optional[ForceGroup] = fg
             self.armed_forces.add_or_update_force_group(fg)
         else:
             if fg and not valid_fg:
